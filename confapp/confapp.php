@@ -4,16 +4,15 @@ Plugin Name: Snowdog_Confapp
 Plugin URI:
 Description: Integration with confapp
 Version: 1.0
-Author Dawid Czaja
+Author: Dawid Czaja
 Author URI:
 License:
 */
 
-
 add_action('admin_menu', 'confapp_setup_menu');
 
 /**
- * Add item to backend menu
+ * Add item to backend menu.
  */
 function confapp_setup_menu()
 {
@@ -21,11 +20,11 @@ function confapp_setup_menu()
 }
 
 /**
- * Render config page
+ * Render config page.
  */
 function confapp_init()
 {
-    echo "<h1>ConfApp</h1>";
+    echo '<h1>ConfApp</h1>';
     echo '<div class="wrap">';
     echo '<form action="' . get_page_url() . '" method="POST">';
     settings_errors('confapp_admin');
@@ -48,14 +47,19 @@ add_action('admin_init', 'confapp_admin_init');
 if (get_option('confapp_general')) {
     $confAppGeneral = get_option('confapp_general');
 } else {
-    add_option('confapp_general', array(
-        'base_url' => '',
-        'api_key' => '',
-        'conference' => '',
-        'default_language' => ''
-    ));
+    add_option(
+        'confapp_general', array(
+            'base_url' => '',
+            'api_key' => '',
+            'conference' => '',
+            'default_language' => ''
+        )
+    );
 }
 
+/**
+ * Save post data from confapp configuration form.
+ */
 function confapp_admin_init()
 {
     global $confAppGeneral;
@@ -64,7 +68,10 @@ function confapp_admin_init()
             'base_url' => htmlentities($_POST['base_url'], ENT_QUOTES),
             'api_key' => htmlentities($_POST['api_key'], ENT_QUOTES),
             'conference' => htmlentities($_POST['conference'], ENT_QUOTES),
-            'default_language' => htmlentities($_POST['default_language'], ENT_QUOTES)
+            'default_language' => htmlentities(
+                $_POST['default_language'],
+                ENT_QUOTES
+            )
         );
 
         $confAppGeneral = $new_values;
@@ -73,12 +80,40 @@ function confapp_admin_init()
 
     register_setting('confapp_admin', 'confapp_admin', 'confapp_admin_sanitize');
 
-    add_settings_section('confapp_admin_selection', 'General', 'confapp_admin_selection_callback', 'confapp_admin_page');
-
-    add_settings_field('confapp_admin_selection_base_url', 'Base url api', 'confapp_admin_selection_base_url_callback', 'confapp_admin_page', 'confapp_admin_selection');
-    add_settings_field('confapp_admin_selection_api_key', 'Api key', 'confapp_admin_selection_api_key_callback', 'confapp_admin_page', 'confapp_admin_selection');
-    add_settings_field('confapp_admin_selection_default_language', 'Select default language', 'confapp_admin_selection_default_language_callback', 'confapp_admin_page', 'confapp_admin_selection');
-    add_settings_field('confapp_admin_selection_conference', 'Select conference', 'confapp_admin_selection_conference_callback', 'confapp_admin_page', 'confapp_admin_selection');
+    add_settings_section(
+        'confapp_admin_selection',
+        'General',
+        'confapp_admin_selection_callback',
+        'confapp_admin_page'
+    );
+    add_settings_field(
+        'confapp_admin_selection_base_url',
+        'Base url api',
+        'confapp_admin_selection_base_url_callback',
+        'confapp_admin_page',
+        'confapp_admin_selection'
+    );
+    add_settings_field(
+        'confapp_admin_selection_api_key',
+        'Api key',
+        'confapp_admin_selection_api_key_callback',
+        'confapp_admin_page',
+        'confapp_admin_selection'
+    );
+    add_settings_field(
+        'confapp_admin_selection_default_language',
+        'Select default language',
+        'confapp_admin_selection_default_language_callback',
+        'confapp_admin_page',
+        'confapp_admin_selection'
+    );
+    add_settings_field(
+        'confapp_admin_selection_conference',
+        'Select conference',
+        'confapp_admin_selection_conference_callback',
+        'confapp_admin_page',
+        'confapp_admin_selection'
+    );
 
 }
 
@@ -86,6 +121,9 @@ function confapp_admin_selection_callback()
 {
 }
 
+/**
+ * Render default language select.
+ */
 function confapp_admin_selection_default_language_callback()
 {
     global $confAppGeneral;
@@ -98,12 +136,17 @@ function confapp_admin_selection_default_language_callback()
         if ($language->locale == $confAppGeneral['default_language']) {
             echo 'selected';
         }
-        echo ' value="' . $language->locale . '"/>' . $language->locale . '</option>';
+        echo ' value="'
+            . $language->locale .
+            '"/>' . $language->locale . '</option>';
     }
     echo '</select>';
 
 }
 
+/**
+ * Render base url input.
+ */
 function confapp_admin_selection_base_url_callback()
 {
     global $confAppGeneral;
@@ -115,6 +158,9 @@ function confapp_admin_selection_base_url_callback()
     echo '"/>';
 }
 
+/**
+ * Render api key input.
+ */
 function confapp_admin_selection_api_key_callback()
 {
     global $confAppGeneral;
@@ -126,6 +172,9 @@ function confapp_admin_selection_api_key_callback()
     echo '"/>';
 }
 
+/**
+ * Render Conference select.
+ */
 function confapp_admin_selection_conference_callback()
 {
     global $confAppGeneral;
@@ -138,7 +187,9 @@ function confapp_admin_selection_conference_callback()
             if ($conference['id'] == $confAppGeneral['conference']) {
                 echo 'selected';
             }
-            echo ' value="' . $conference["id"] . '"/>' . $conference['name'] . '</option>';
+            echo ' value="' .
+                $conference['id'] . '"/>' .
+                $conference['name'] . '</option>';
         }
         echo '</select>';
     } else {
@@ -148,7 +199,7 @@ function confapp_admin_selection_conference_callback()
 }
 
 /**
- * Get page url
+ * Get page url.
  *
  * @param string $page
  * @return string
@@ -166,7 +217,7 @@ function get_page_url($page = 'config')
 }
 
 /**
- * Synchronization WP data with confApp
+ * Synchronization WP data with confApp.
  */
 function synchronizeConference()
 {
@@ -175,11 +226,13 @@ function synchronizeConference()
     global $wpdb;
 
     //synchronize conference
-    $conferencesData = array_shift(getDataByCurl('conferences/' . $confAppGeneral['conference'] . '.json'));
+    $conferencesData = array_shift(
+        getDataByCurl('conferences/' . $confAppGeneral['conference'] . '.json')
+    );
     if ($conferencesData) {
         //add conference
-        $wpdb->query("TRUNCATE TABLE " . $wpdb->prefix . 'conferences');
-        $table = $wpdb->prefix . "conferences";
+        $wpdb->query("TRUNCATE TABLE  {$wpdb->prefix}conferences");
+        $table = $wpdb->prefix . 'conferences';
         $wpdb->insert(
             $table,
             array(
@@ -192,14 +245,17 @@ function synchronizeConference()
                 'end' => $conferencesData['end'],
                 'twitter_hashtag' => $conferencesData['twitter_hashtag'],
                 'twitter_handle' => $conferencesData['twitter_handle'],
-//                'default_language' => json_encode($conferencesData['default_language']),
             )
         );
 
         //add conference translations
-        $wpdb->query("TRUNCATE TABLE " . $wpdb->prefix . 'conference_translations');
-        $table = $wpdb->prefix . "conference_translations";
-        $conferencesLanguage = getDataByCurl('conferences/' . $conferencesData['id'] . '/translations/conference_translations/' . $conferencesData['id'] . '/conference_id.json');
+        $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}conference_translations");
+        $table = $wpdb->prefix . 'conference_translations';
+        $conferencesLanguage = getDataByCurl(
+            'conferences/' . $conferencesData['id'] .
+            '/translations/conference_translations/' .
+            $conferencesData['id'] . '/conference_id.json'
+        );
         foreach ($conferencesLanguage as $translation) {
             $wpdb->insert(
                 $table,
@@ -216,11 +272,13 @@ function synchronizeConference()
     }
 
     //synchronize day
-    $daysData = getDataByCurl('conferences/' . $confAppGeneral['conference'] . '/days.json');
-    $wpdb->query("TRUNCATE TABLE " . $wpdb->prefix . 'day_translations');
-    $wpdb->query("TRUNCATE TABLE " . $wpdb->prefix . 'day');
+    $daysData = getDataByCurl(
+        'conferences/' . $confAppGeneral['conference'] . '/days.json'
+    );
+    $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}day_translations");
+    $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}day");
     if ($daysData) {
-        $table = $wpdb->prefix . "day";
+        $table = $wpdb->prefix . 'day';
         foreach ($daysData as $day) {
             //add day
             $wpdb->insert(
@@ -230,14 +288,16 @@ function synchronizeConference()
                     'date' => $day['date'],
                     'conference_id' => $day['conference_id'],
                     'updated_at' => $day['updated_at'],
-//                'default_language' => $day['default_language'],
                 )
             );
         }
 
         //add day translations
-        $tableTranslation = $wpdb->prefix . "day_translations";
-        $dayLanguage = getDataByCurl('conferences/' . $conferencesData['id'] . '/translations/day_translations/' . $day['id'] . '/day_id.json');
+        $tableTranslation = $wpdb->prefix . 'day_translations';
+        $dayLanguage = getDataByCurl(
+            'conferences/' . $conferencesData['id'] .
+            '/translations/day_translations/' . $day['id'] . '/day_id.json'
+        );
         if ($dayLanguage) {
             foreach ($dayLanguage as $translation) {
                 $wpdb->insert(
@@ -256,10 +316,11 @@ function synchronizeConference()
 
     //synchronize floor
     $floors = getDataByCurl($confAppGeneral['conference'] . '/maps.json');
-    $wpdb->query("TRUNCATE TABLE " . $wpdb->prefix . 'floors');
-    $wpdb->query("TRUNCATE TABLE " . $wpdb->prefix . 'floor_translations');
+    $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}floors");
+    $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}floor_translations");
     if ($floors) {
-        $table = $wpdb->prefix . "floors";
+        $table = $wpdb->prefix . 'floors';
+        $tableTranslation = $wpdb->prefix . 'floor_translations';
         foreach ($floors as $floor) {
             $wpdb->insert(
                 $table,
@@ -268,13 +329,14 @@ function synchronizeConference()
                     'avatar' => $floor['url'],
                     'order' => $floor['order'],
                     'conference_id' => $confAppGeneral['conference'],
-//                'default_language' => $floor['default_language'],
                 )
             );
 
-            //add floor translations
-            $tableTranslation = $wpdb->prefix . "floor_translations";
-            $floorLanguage = getDataByCurl('conferences/' . $conferencesData['id'] . '/translations/floor_translations/' . $floor['id'] . '/floor_id.json');
+            //add floor translatio
+            $floorLanguage = getDataByCurl(
+                'conferences/' . $conferencesData['id'] .
+                '/translations/floor_translations/' . $floor['id'] . '/floor_id.json'
+            );
             if ($floorLanguage) {
                 foreach ($floorLanguage as $translation) {
                     $wpdb->insert(
@@ -293,11 +355,14 @@ function synchronizeConference()
     }
 
     //synchronize presentation
-    $presentations = getDataByCurl('conferences/' . $confAppGeneral['conference'] . '/presentations.json');
-    $wpdb->query("TRUNCATE TABLE " . $wpdb->prefix . 'presentation');
-    $wpdb->query("TRUNCATE TABLE " . $wpdb->prefix . 'presentation_translations');
+    $presentations = getDataByCurl(
+        'conferences/' . $confAppGeneral['conference'] . '/presentations.json'
+    );
+    $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}presentation");
+    $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}presentation_translations");
     if ($presentations) {
-        $table = $wpdb->prefix . "presentation";
+        $table = $wpdb->prefix . 'presentation';
+        $tableTranslation = $wpdb->prefix . 'presentation_translations';
         foreach ($presentations as $presentation) {
             $wpdb->insert(
                 $table,
@@ -315,8 +380,11 @@ function synchronizeConference()
             );
 
             //add presentation translations
-            $tableTranslation = $wpdb->prefix . "presentation_translations";
-            $presentationLanguage = getDataByCurl('conferences/' . $conferencesData['id'] . '/translations/presentation_translations/' . $presentation['id'] . '/presentation_id.json');
+            $presentationLanguage = getDataByCurl(
+                'conferences/' . $conferencesData['id'] .
+                '/translations/presentation_translations/' .
+                $presentation['id'] . '/presentation_id.json'
+            );
             if ($presentationLanguage) {
                 foreach ($presentationLanguage as $translation) {
                     $wpdb->insert(
@@ -336,10 +404,12 @@ function synchronizeConference()
     }
 
     //synchronize speeches
-    $speeches = getDataByCurl('conferences/' . $confAppGeneral['conference'] . '/speeches.json');
-    $wpdb->query("TRUNCATE TABLE " . $wpdb->prefix . 'speaches');
+    $speeches = getDataByCurl(
+        'conferences/' . $confAppGeneral['conference'] . '/speeches.json'
+    );
+    $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}speaches");
     if ($speeches) {
-        $table = $wpdb->prefix . "speaches";
+        $table = $wpdb->prefix . 'speaches';
         foreach ($speeches as $speech) {
             $wpdb->insert(
                 $table,
@@ -354,11 +424,14 @@ function synchronizeConference()
     }
 
     //synchronize speaker
-    $speakers = getDataByCurl('conferences/' . $confAppGeneral['conference'] . '/speakers.json');
-    $wpdb->query("TRUNCATE TABLE " . $wpdb->prefix . 'speaker');
-    $wpdb->query("TRUNCATE TABLE " . $wpdb->prefix . 'speaker_translations');
+    $speakers = getDataByCurl(
+        'conferences/' . $confAppGeneral['conference'] . '/speakers.json'
+    );
+    $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}speaker");
+    $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}speaker_translations");
     if ($speakers) {
-        $table = $wpdb->prefix . "speaker";
+        $table = $wpdb->prefix . 'speaker';
+        $tableTranslation = $wpdb->prefix . 'speaker_translations';
         foreach ($speakers as $speaker) {
             $wpdb->insert(
                 $table,
@@ -376,8 +449,11 @@ function synchronizeConference()
             );
 
             //add presentation translations
-            $tableTranslation = $wpdb->prefix . "speaker_translations";
-            $speakerLanguage = getDataByCurl('conferences/' . $conferencesData['id'] . '/translations/speaker_translations/' . $speaker['id'] . '/speaker_id.json');
+            $speakerLanguage = getDataByCurl(
+                'conferences/' . $conferencesData['id'] .
+                '/translations/speaker_translations/' .
+                $speaker['id'] . '/speaker_id.json'
+            );
             if ($speakerLanguage) {
                 foreach ($speakerLanguage as $translation) {
                     $wpdb->insert(
@@ -397,11 +473,14 @@ function synchronizeConference()
     }
 
     //synchronize tracks
-    $tracks = getDataByCurl('conferences/' . $confAppGeneral['conference'] . '/tracks.json');
-    $wpdb->query("TRUNCATE TABLE " . $wpdb->prefix . 'track');
-    $wpdb->query("TRUNCATE TABLE " . $wpdb->prefix . 'track_translations');
+    $tracks = getDataByCurl(
+        'conferences/' . $confAppGeneral['conference'] . '/tracks.json'
+    );
+    $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}track");
+    $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}track_translations");
     if ($tracks) {
-        $table = $wpdb->prefix . "track";
+        $table = $wpdb->prefix . 'track';
+        $tableTranslation = $wpdb->prefix . 'track_translations';
         foreach ($tracks as $track) {
             $wpdb->insert(
                 $table,
@@ -414,8 +493,10 @@ function synchronizeConference()
             );
 
             //add tracks translations
-            $tableTranslation = $wpdb->prefix . "track_translations";
-            $trackLanguage = getDataByCurl('conferences/' . $conferencesData['id'] . '/translations/track_translations/' . $track['id'] . '/track_id.json');
+            $trackLanguage = getDataByCurl(
+                'conferences/' . $conferencesData['id'] .
+                '/translations/track_translations/' . $track['id'] . '/track_id.json'
+            );
             if ($trackLanguage) {
                 foreach ($trackLanguage as $translation) {
                     $wpdb->insert(
@@ -436,7 +517,7 @@ function synchronizeConference()
 }
 
 /**
- * Get conferences from api
+ * Get conferences from api.
  */
 function getConferences()
 {
@@ -444,7 +525,7 @@ function getConferences()
 }
 
 /**
- * Get data by curl
+ * Get data by curl.
  */
 function getDataByCurl($url)
 {
@@ -452,7 +533,11 @@ function getDataByCurl($url)
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_URL, $confAppGeneral['base_url'] . $url . '?key=' . $confAppGeneral['api_key']);
+    curl_setopt(
+        $ch,
+        CURLOPT_URL,
+        $confAppGeneral['base_url'] . $url . '?key=' . $confAppGeneral['api_key']
+    );
     $result = curl_exec($ch);
     curl_close($ch);
 
@@ -460,17 +545,19 @@ function getDataByCurl($url)
 }
 
 /**
- * Installer
+ * Installer.
  */
 function confapp_activate()
 {
     global $wpdb;
 
-    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
     $tableNameConferences = $wpdb->prefix . 'conferences';
 
-    if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableNameConferences) != $tableNameConferences) {
+    if (
+        $wpdb->get_var('SHOW TABLES LIKE ' . $tableNameConferences) != $tableNameConferences
+    ) {
         $sql = 'CREATE TABLE ' . $tableNameConferences . '(
                   `id` int(11) NOT NULL AUTO_INCREMENT,
                   `avatar` varchar(255) DEFAULT NULL,
@@ -669,14 +756,14 @@ function confapp_activate()
 }
 
 /**
- * Add template
+ * Add template.
  *
  * @return bool
  */
 function confapp_theme_addititonal()
 {
-    $fileToAdd = ABSPATH . "wp-content/plugins/confapp/confappTemplate.php";
-    $duplicatedDirFilename = get_template_directory() . "/confapp_pagetemplate.php";
+    $fileToAdd = ABSPATH . 'wp-content/plugins/confapp/confappTemplate.php';
+    $duplicatedDirFilename = get_template_directory() . '/confapp_pagetemplate.php';
     if (copy($fileToAdd, $duplicatedDirFilename)) {
         $data = file_get_contents($fileToAdd);
         if ($data == false) {
@@ -690,26 +777,31 @@ function confapp_theme_addititonal()
 }
 
 /**
- * Remove template
+ * Remove template.
  */
 function confapp_theme_subtractextras()
 {
-    $fileToDelete = get_template_directory() . "confapp_pagetemplate." . strtolower(trim(get_current_theme())) . ".php";
+    $fileToDelete = get_template_directory() .
+        'confapp_pagetemplate.' . strtolower(trim(get_current_theme())) . '.php';
     $fh = fopen($fileToDelete, 'w') or die('can`t open file');
     fclose($fh);
     unlink($fileToDelete);
 }
 
 /**
- * Activate module hook
+ * Activate module hook.
  */
 register_activation_hook(__FILE__, 'confapp_activate');
 /**
- * Uninstall module hook
+ * Uninstall module hook.
  */
 register_uninstall_hook(__FILE__, 'confapp_theme_subtractextras');
 
-
+/**
+ * Get Days from database.
+ *
+ * @return mixed
+ */
 function getConfrenceDays()
 {
     global $confAppGeneral;
@@ -728,13 +820,16 @@ function getConfrenceDays()
         $results = $wpdb->get_results("
       SELECT * FROM $tablename
       LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.day_id
-      WHERE  $tablenameLanguage.locale = '" . $confAppGeneral['default_language'] . "'
+      WHERE  $tablenameLanguage.locale = {$confAppGeneral['default_language']}
     ");
     }
 
     return $results;
 }
 
+/**
+ * Get Floors from database.
+ */
 function getConfrenceFloors()
 {
     global $confAppGeneral;
@@ -753,11 +848,18 @@ function getConfrenceFloors()
         $results = $wpdb->get_results("
       SELECT * FROM $tablename
       LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.floor_id
-      WHERE  $tablenameLanguage.locale = '" . $confAppGeneral['default_language'] . "'
+      WHERE  $tablenameLanguage.locale = {$confAppGeneral['default_language']}
     ");
     }
 }
 
+/**
+ * Get Presentations from database.
+ *
+ * @param $day
+ * @param $track
+ * @return mixed
+ */
 function getConfrencePresentations($day, $track)
 {
     global $confAppGeneral;
@@ -774,7 +876,8 @@ function getConfrencePresentations($day, $track)
       LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.presentation_id
       LEFT JOIN $tablenameSpeeches ON $tablename.id = $tablenameSpeeches.presentation_id
       LEFT JOIN $tablenameSpekaer ON $tablenameSpeeches.speaker_id = $tablenameSpekaer.id
-      LEFT JOIN $tablenameSpekaerTranslation ON $tablenameSpekaer.id = $tablenameSpekaerTranslation.speaker_id AND $tablenameSpekaerTranslation.locale ='$language'
+      LEFT JOIN $tablenameSpekaerTranslation ON $tablenameSpekaer.id = $tablenameSpekaerTranslation.speaker_id
+      AND $tablenameSpekaerTranslation.locale ='$language'
       WHERE  $tablenameLanguage.locale = '$language'
       AND $tablename.day_id = $day
       AND $tablename.track_id = $track
@@ -786,8 +889,9 @@ function getConfrencePresentations($day, $track)
       LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.presentation_id
       LEFT JOIN $tablenameSpeeches ON $tablename.id = $tablenameSpeeches.presentation_id
       LEFT JOIN $tablenameSpekaer ON $tablenameSpeeches.speaker_id = $tablenameSpekaer.id
-      LEFT JOIN $tablenameSpekaerTranslation ON $tablenameSpekaer.id = $tablenameSpekaerTranslation.speaker_id AND $tablenameSpekaerTranslation.locale = '" . $confAppGeneral['default_language'] . "'
-      WHERE  $tablenameLanguage.locale = '" . $confAppGeneral['default_language'] . "'
+      LEFT JOIN $tablenameSpekaerTranslation ON $tablenameSpekaer.id = $tablenameSpekaerTranslation.speaker_id
+      AND $tablenameSpekaerTranslation.locale = {$confAppGeneral['default_language']}
+      WHERE  $tablenameLanguage.locale = {$confAppGeneral['default_language']}
       AND $tablename.day_id = $day
       AND $tablename.track_id = $track
     ");
@@ -796,6 +900,12 @@ function getConfrencePresentations($day, $track)
     return $results;
 }
 
+/**
+ * Get Speaker data form database.
+ *
+ * @param $speakerId
+ * @return mixed
+ */
 function getSpeaker($speakerId)
 {
     global $confAppGeneral;
@@ -815,7 +925,7 @@ function getSpeaker($speakerId)
         $results = $wpdb->get_results("
       SELECT * FROM $tablename
       LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.speaker_id
-      WHERE  $tablenameLanguage.locale = '" . $confAppGeneral['default_language'] . "'
+      WHERE  $tablenameLanguage.locale = {$confAppGeneral['default_language']}
       AND $tablename.id = $speakerId
     ");
     }
@@ -823,6 +933,11 @@ function getSpeaker($speakerId)
     return $results;
 }
 
+/**
+ * Get Track data from database.
+ *
+ * @return mixed
+ */
 function getTracks()
 {
     global $confAppGeneral;
@@ -841,13 +956,18 @@ function getTracks()
         $results = $wpdb->get_results("
       SELECT * FROM $tablename
       LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.track_id
-      WHERE  $tablenameLanguage.locale = '" . $confAppGeneral['default_language'] . "'
+      WHERE  $tablenameLanguage.locale = {$confAppGeneral['default_language']}
     ");
     }
 
     return $results;
 }
 
+/**
+ * Get conference data from database.
+ *
+ * @return mixed
+ */
 function getConfrenceData()
 {
     global $confAppGeneral;
@@ -867,13 +987,18 @@ function getConfrenceData()
         $results = $wpdb->get_results("
       SELECT * FROM $tablename
       LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.conference_id
-      WHERE  $tablenameLanguage.locale = '" . $confAppGeneral['default_language'] . "'
+      WHERE  $tablenameLanguage.locale = {$confAppGeneral['default_language']}
       LIMIT 1
     ");
     }
     return array_shift($results);
 }
 
+/**
+ * Get language
+ *
+ * @return string
+ */
 function getLang()
 {
     return substr(get_locale(), 0, 2);
