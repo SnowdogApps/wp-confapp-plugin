@@ -823,7 +823,7 @@ function getConfrenceDays()
         $results = $wpdb->get_results("
           SELECT * FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.day_id
-          WHERE  $tablenameLanguage.locale = {$confAppGeneral['default_language']}
+          WHERE  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
     ");
     }
 
@@ -851,7 +851,7 @@ function getConfrenceFloors()
         $results = $wpdb->get_results("
           SELECT * FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.floor_id
-          WHERE  $tablenameLanguage.locale = {$confAppGeneral['default_language']}
+          WHERE  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
     ");
     }
 }
@@ -893,8 +893,8 @@ function getConfrencePresentations($day, $track)
           LEFT JOIN $tablenameSpeeches ON $tablename.id = $tablenameSpeeches.presentation_id
           LEFT JOIN $tablenameSpekaer ON $tablenameSpeeches.speaker_id = $tablenameSpekaer.id
           LEFT JOIN $tablenameSpekaerTranslation ON $tablenameSpekaer.id = $tablenameSpekaerTranslation.speaker_id
-          AND $tablenameSpekaerTranslation.locale = {$confAppGeneral['default_language']}
-          WHERE  $tablenameLanguage.locale = {$confAppGeneral['default_language']}
+          AND $tablenameSpekaerTranslation.locale = '{$confAppGeneral['default_language']}'
+          WHERE  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
           AND $tablename.day_id = $day
           AND $tablename.track_id = $track
     ");
@@ -928,7 +928,7 @@ function getSpeaker($speakerId)
         $results = $wpdb->get_results("
           SELECT * FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.speaker_id
-          WHERE  $tablenameLanguage.locale = {$confAppGeneral['default_language']}
+          WHERE  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
           AND $tablename.id = $speakerId
     ");
     }
@@ -959,7 +959,7 @@ function getTracks()
         $results = $wpdb->get_results("
           SELECT * FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.track_id
-          WHERE  $tablenameLanguage.locale = {$confAppGeneral['default_language']}
+          WHERE  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
     ");
     }
 
@@ -990,7 +990,7 @@ function getConfrenceData()
         $results = $wpdb->get_results("
           SELECT * FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.conference_id
-          WHERE  $tablenameLanguage.locale = {$confAppGeneral['default_language']}
+          WHERE  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
           LIMIT 1
     ");
     }
