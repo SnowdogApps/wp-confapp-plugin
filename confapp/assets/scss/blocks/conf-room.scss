@@ -1,0 +1,23 @@
+.conf-room {
+  margin: 10px;
+  text-align: center;
+  &__item {
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: inline-block;
+    margin: 5px;
+    padding: 5px 15px;
+    background-color: $color-gray-light;
+    border: 2px solid $color-gray-light;
+    color: $color-gray-dark;
+    @include max-screen($screen__s) {
+      font-size: 0.6rem;
+      margin: 2px;
+      padding: 5px 10px;
+    }
+    &--selected {
+      background-color: $color-white;
+      color: $color-black;
+    }
+  }
+}
