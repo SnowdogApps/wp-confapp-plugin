@@ -6,10 +6,14 @@
 <?php
 get_header();
 ?>
+
+<?php
+$_confrence_days = getConfrenceDays();
+
+?>
 <div id="primary" class="content-areas">
     <main id="main" class="site-main" role="main">
 
-        test
         <?php
         // Start the loop.
         while (have_posts()) : the_post();
@@ -25,22 +29,13 @@ get_header();
             // End of the loop.
         endwhile;
         ?>
-        <?php getConfrenceData(); ?>
-        <?php getConfrenceDays(); ?>
-        <?php getConfrenceFloors(); ?>
-        <?php getConfrencePresentations($dayId, $trackId); ?>
-        <?php getSpeaker($speakerId); ?>
-        <?php getTracks(); ?>
 
         <ul class="conf-days">
-            <li class="conf-days__item conf-days__item--selected" data-filter="19/09">
-                <div class="conf-days__day">Poniedzialek</div>
-                <div class="conf-days__date">19/09</div>
-            </li>
-            <li class="conf-days__item" data-filter="20/09">
-                <div class="conf-days__day">Wtorek</div>
-                <div class="conf-days__date">20/09</div>
-            </li>
+            <?php foreach ($_confrence_days as $_confrence_day): ?>
+                <li class="conf-days__item conf-days__item--selected" data-filter="19/09">
+                    <div class="conf-days__day"><?php echo $_confrence_day->name ?></div>
+                </li>
+            <?php endforeach; ?>
         </ul>
         <ul class="conf-room">
             <li class="conf-room__item" data-filter="Open Space">Open Space</li>
@@ -148,6 +143,17 @@ get_header();
                 </div>
             </li>
         </ul>
+
+
+
+
+        getConfrenceData: <?php var_dump(getConfrenceData()); ?><br/>
+        getConfrenceDays: <?php var_dump(getConfrenceDays()); ?><br/>
+        getConfrenceFloors: <?php var_dump(getConfrenceFloors()); ?><br/>
+        getConfrencePresentations: <?php var_dump(getConfrencePresentations($dayId, $trackId)); ?><br/>
+        getSpeaker: <?php var_dump(getSpeaker($speakerId)); ?><br/>
+        getTracks: <?php var_dump(getTracks()); ?><br/>
+
 
     </main><!-- .site-main -->
 </div><!-- .content-area -->
