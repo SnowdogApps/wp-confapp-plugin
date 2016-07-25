@@ -52,7 +52,7 @@ $_confrence_days = getConfrenceDays();
                         <div class="conf-agenda__presentation-speaker">Ben Marks</div>
                     </div>
                     <div class="conf-agenda__info">
-                        <div class="conf-agenda__language conf-agenda__language--polish"></div>
+                        <div class="conf-agenda__language flag flag--pl"></div>
                         <div class="conf-agenda__room-type">Devs Room</div>
                     </div>
                 </div>
@@ -63,7 +63,7 @@ $_confrence_days = getConfrenceDays();
                         <div class="conf-agenda__presentation-speaker">Ben Marks</div>
                     </div>
                     <div class="conf-agenda__info">
-                        <div class="conf-agenda__language">Polish</div>
+                        <div class="conf-agenda__language flag flag--gb"></div>
                         <div class="conf-agenda__room-type">Open Space</div>
                     </div>
                 </div>
@@ -76,7 +76,7 @@ $_confrence_days = getConfrenceDays();
                         <div class="conf-agenda__presentation-speaker">Ben Marks</div>
                     </div>
                     <div class="conf-agenda__info">
-                        <div class="conf-agenda__language">Polish</div>
+                        <div class="conf-agenda__language flag flag--pl"></div>
                         <div class="conf-agenda__room-type">Devs Room</div>
                     </div>
                 </div>
@@ -87,7 +87,7 @@ $_confrence_days = getConfrenceDays();
                         <div class="conf-agenda__presentation-speaker">Ben Marks</div>
                     </div>
                     <div class="conf-agenda__info">
-                        <div class="conf-agenda__language">Polish</div>
+                        <div class="conf-agenda__language flag flag--pl"></div>
                         <div class="conf-agenda__room-type">Open Space</div>
                     </div>
                 </div>
@@ -102,7 +102,7 @@ $_confrence_days = getConfrenceDays();
                         <div class="conf-agenda__presentation-speaker">Ben Marks</div>
                     </div>
                     <div class="conf-agenda__info">
-                        <div class="conf-agenda__language conf-agenda__language--polish"></div>
+                        <div class="conf-agenda__language flag flag--gb"></div>
                         <div class="conf-agenda__room-type">Devs Room</div>
                     </div>
                 </div>
@@ -113,7 +113,7 @@ $_confrence_days = getConfrenceDays();
                         <div class="conf-agenda__presentation-speaker">Ben Marks</div>
                     </div>
                     <div class="conf-agenda__info">
-                        <div class="conf-agenda__language">Polish</div>
+                        <div class="conf-agenda__language flag flag--pl"></div>
                         <div class="conf-agenda__room-type">Open Space</div>
                     </div>
                 </div>
@@ -126,7 +126,7 @@ $_confrence_days = getConfrenceDays();
                         <div class="conf-agenda__presentation-speaker">Ben Marks</div>
                     </div>
                     <div class="conf-agenda__info">
-                        <div class="conf-agenda__language">Polish</div>
+                        <div class="conf-agenda__language flag flag--gb"></div>
                         <div class="conf-agenda__room-type">Devs Room</div>
                     </div>
                 </div>
@@ -137,7 +137,7 @@ $_confrence_days = getConfrenceDays();
                         <div class="conf-agenda__presentation-speaker">Ben Marks</div>
                     </div>
                     <div class="conf-agenda__info">
-                        <div class="conf-agenda__language">Polish</div>
+                        <div class="conf-agenda__language flag flag--pl"></div>
                         <div class="conf-agenda__room-type">Open Space</div>
                     </div>
                 </div>

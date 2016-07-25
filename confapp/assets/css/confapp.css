@@ -183,3 +183,20 @@
   background-color: #fff;
   color: #000;
 }
+
+/* line 1, /Users/talalus/Sites/snowdog/confapp.dev/wp-confapp-pugin/confapp/assets/scss/blocks/_flags.scss */
+.flag {
+  width: 32px;
+  height: 32px;
+  background: url(../images/flags.png) no-repeat;
+}
+
+/* line 5, /Users/talalus/Sites/snowdog/confapp.dev/wp-confapp-pugin/confapp/assets/scss/blocks/_flags.scss */
+.flag--gb {
+  background-position: -32px 0;
+}
+
+/* line 8, /Users/talalus/Sites/snowdog/confapp.dev/wp-confapp-pugin/confapp/assets/scss/blocks/_flags.scss */
+.flag--pl {
+  background-position: 0 -32px;
+}
