@@ -891,7 +891,7 @@ function getConfrencePresentations($day)
 
     $results = $wpdb->get_results("
       SELECT $tablename.*, $tablenameSpekaerTranslation.name as speaker_name,
-             $tablenameLanguage.name, $tablenameLanguage.description,
+             $tablenameLanguage.name, $tablenameLanguage.description, $tablenameLanguage.locale
              $tablenameSpekaerTranslation.description as speaker_description,
              $tablenameSpekaer.id as speaker_id
       FROM $tablename
@@ -908,7 +908,7 @@ function getConfrencePresentations($day)
     if (!isset($results['name']) || $results['name'] == null) {
         $results = $wpdb->get_results("
           SELECT $tablename.*, $tablenameSpekaerTranslation.name as speaker_name,
-             $tablenameLanguage.name, $tablenameLanguage.description,
+             $tablenameLanguage.name, $tablenameLanguage.description, $tablenameLanguage.locale
              $tablenameSpekaerTranslation.description as speaker_description,
              $tablenameSpekaer.id as speaker_id
           FROM $tablename
