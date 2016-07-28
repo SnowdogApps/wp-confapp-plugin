@@ -563,17 +563,17 @@ function confapp_activate()
         $wpdb->get_var('SHOW TABLES LIKE ' . $tableNameConferences) != $tableNameConferences
     ) {
         $sql = 'CREATE TABLE ' . $tableNameConferences . '(
-                  `id` int(11) NOT NULL AUTO_INCREMENT,
-                  `avatar` varchar(255) DEFAULT NULL,
-                  `www` varchar(255) DEFAULT NULL,
-                  `register_www` varchar(255) DEFAULT NULL,
-                  `email` varchar(255) DEFAULT NULL,
-                  `updated_at` datetime DEFAULT NULL,
-                  `begin` datetime DEFAULT NULL,
-                  `end` datetime DEFAULT NULL,
-                  `twitter_hashtag` varchar(255) DEFAULT NULL,
-                  `twitter_handle` varchar(255) DEFAULT NULL,
-              PRIMARY KEY (`id`))';
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `avatar` varchar(255) DEFAULT NULL,
+                `www` varchar(255) DEFAULT NULL,
+                `register_www` varchar(255) DEFAULT NULL,
+                `email` varchar(255) DEFAULT NULL,
+                `updated_at` datetime DEFAULT NULL,
+                `begin` datetime DEFAULT NULL,
+                `end` datetime DEFAULT NULL,
+                `twitter_hashtag` varchar(255) DEFAULT NULL,
+                `twitter_handle` varchar(255) DEFAULT NULL,
+                PRIMARY KEY (`id`))';
 
         dbDelta($sql);
     }
@@ -582,13 +582,13 @@ function confapp_activate()
 
     if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableNameConferenceTranslation) != $tableNameConferenceTranslation) {
         $sql = 'CREATE TABLE ' . $tableNameConferenceTranslation . '(
-                  `id` int(11) NOT NULL AUTO_INCREMENT,
-                  `conference_id` int(11) NOT NULL,
-                  `locale` varchar(255) NOT NULL,
-                  `updated_at` datetime DEFAULT NULL,
-                  `name` varchar(255) DEFAULT NULL,
-                  `description` text,
-              PRIMARY KEY (`id`))';
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `conference_id` int(11) NOT NULL,
+                `locale` varchar(255) NOT NULL,
+                `updated_at` datetime DEFAULT NULL,
+                `name` varchar(255) DEFAULT NULL,
+                `description` text,
+                PRIMARY KEY (`id`))';
 
         dbDelta($sql);
     }
@@ -597,11 +597,11 @@ function confapp_activate()
 
     if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableNameDay) != $tableNameDay) {
         $sql = 'CREATE TABLE ' . $tableNameDay . '(
-                  `id` int(11) NOT NULL AUTO_INCREMENT,
-                  `date` date DEFAULT NULL,
-                  `conference_id` int(11) DEFAULT NULL,
-                  `updated_at` datetime DEFAULT NULL,
-                  PRIMARY KEY (`id`))';
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `date` date DEFAULT NULL,
+                `conference_id` int(11) DEFAULT NULL,
+                `updated_at` datetime DEFAULT NULL,
+                PRIMARY KEY (`id`))';
 
         dbDelta($sql);
     }
@@ -610,12 +610,12 @@ function confapp_activate()
 
     if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableNameDayTranslations) != $tableNameDayTranslations) {
         $sql = 'CREATE TABLE ' . $tableNameDayTranslations . '(
-                      `id` int(11) NOT NULL AUTO_INCREMENT,
-                      `day_id` int(11) NOT NULL,
-                      `locale` varchar(255) NOT NULL,
-                      `updated_at` datetime DEFAULT NULL,
-                      `name` varchar(255) DEFAULT NULL,
-                  PRIMARY KEY (`id`))';
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `day_id` int(11) NOT NULL,
+                `locale` varchar(255) NOT NULL,
+                `updated_at` datetime DEFAULT NULL,
+                `name` varchar(255) DEFAULT NULL,
+                PRIMARY KEY (`id`))';
 
         dbDelta($sql);
     }
@@ -624,16 +624,16 @@ function confapp_activate()
 
     if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableNamePresentation) != $tableNamePresentation) {
         $sql = 'CREATE TABLE ' . $tableNamePresentation . '(
-                  `id` int(11) NOT NULL AUTO_INCREMENT,
-                  `date` datetime DEFAULT NULL,
-                  `duration` int(11) DEFAULT NULL,
-                  `avatar` varchar(255) DEFAULT NULL,
-                  `track_id` int(11) DEFAULT NULL,
-                  `day_id` int(11) DEFAULT NULL,
-                  `updated_at` datetime DEFAULT NULL,
-                  `localization_id` int(11) DEFAULT NULL,
-                  `conference_id` int(11) DEFAULT NULL,
-                  PRIMARY KEY (`id`))';
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `date` datetime DEFAULT NULL,
+                `duration` int(11) DEFAULT NULL,
+                `avatar` varchar(255) DEFAULT NULL,
+                `track_id` int(11) DEFAULT NULL,
+                `day_id` int(11) DEFAULT NULL,
+                `updated_at` datetime DEFAULT NULL,
+                `localization_id` int(11) DEFAULT NULL,
+                `conference_id` int(11) DEFAULT NULL,
+                PRIMARY KEY (`id`))';
 
         dbDelta($sql);
     }
@@ -642,13 +642,13 @@ function confapp_activate()
 
     if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableNamePresentationTranslations) != $tableNamePresentationTranslations) {
         $sql = 'CREATE TABLE ' . $tableNamePresentationTranslations . '(
-                  `id` int(11) NOT NULL AUTO_INCREMENT,
-                  `presentation_id` int(11) NOT NULL,
-                  `locale` varchar(255) NOT NULL,
-                  `updated_at` datetime DEFAULT NULL,
-                  `name` varchar(255) DEFAULT NULL,
-                  `description` text,
-                  PRIMARY KEY (`id`))';
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `presentation_id` int(11) NOT NULL,
+                `locale` varchar(255) NOT NULL,
+                `updated_at` datetime DEFAULT NULL,
+                `name` varchar(255) DEFAULT NULL,
+                `description` text,
+                PRIMARY KEY (`id`))';
 
         dbDelta($sql);
     }
@@ -657,16 +657,16 @@ function confapp_activate()
 
     if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableNameSpeaker) != $tableNameSpeaker) {
         $sql = 'CREATE TABLE ' . $tableNameSpeaker . '(
-                  `id` int(11) NOT NULL AUTO_INCREMENT,
-                  `company` varchar(255) DEFAULT NULL,
-                  `avatar` varchar(255) DEFAULT NULL,
-                  `updated_at` datetime DEFAULT NULL,
-                  `www` varchar(255) DEFAULT NULL,
-                  `email` varchar(255) DEFAULT NULL,
-                  `phone` varchar(255) DEFAULT NULL,
-                  `conference_id` int(11) DEFAULT NULL,
-                  `twitter_handle` varchar(255) DEFAULT NULL,
-                  PRIMARY KEY (`id`))';
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `company` varchar(255) DEFAULT NULL,
+                `avatar` varchar(255) DEFAULT NULL,
+                `updated_at` datetime DEFAULT NULL,
+                `www` varchar(255) DEFAULT NULL,
+                `email` varchar(255) DEFAULT NULL,
+                `phone` varchar(255) DEFAULT NULL,
+                `conference_id` int(11) DEFAULT NULL,
+                `twitter_handle` varchar(255) DEFAULT NULL,
+                PRIMARY KEY (`id`))';
 
         dbDelta($sql);
     }
@@ -675,13 +675,13 @@ function confapp_activate()
 
     if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableNameSpeakerTranslations) != $tableNameSpeakerTranslations) {
         $sql = 'CREATE TABLE ' . $tableNameSpeakerTranslations . '(
-                  `id` int(11) NOT NULL AUTO_INCREMENT,
-                  `speaker_id` int(11) NOT NULL,
-                  `locale` varchar(255) NOT NULL,
-                  `updated_at` datetime DEFAULT NULL,
-                  `name` varchar(255) DEFAULT NULL,
-                  `description` text,
-                  PRIMARY KEY (`id`))';
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `speaker_id` int(11) NOT NULL,
+                `locale` varchar(255) NOT NULL,
+                `updated_at` datetime DEFAULT NULL,
+                `name` varchar(255) DEFAULT NULL,
+                `description` text,
+                PRIMARY KEY (`id`))';
 
         dbDelta($sql);
     }
@@ -690,11 +690,11 @@ function confapp_activate()
 
     if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableNameSpeaches) != $tableNameSpeaches) {
         $sql = 'CREATE TABLE ' . $tableNameSpeaches . '(
-                  `id` int(11) NOT NULL AUTO_INCREMENT,
-                  `speaker_id` int(11) DEFAULT NULL,
-                  `presentation_id` int(11) DEFAULT NULL,
-                  `updated_at` datetime DEFAULT NULL,
-                  PRIMARY KEY (`id`))';
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `speaker_id` int(11) DEFAULT NULL,
+                `presentation_id` int(11) DEFAULT NULL,
+                `updated_at` datetime DEFAULT NULL,
+                PRIMARY KEY (`id`))';
 
         dbDelta($sql);
     }
@@ -703,11 +703,11 @@ function confapp_activate()
 
     if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableTrack) != $tableTrack) {
         $sql = 'CREATE TABLE ' . $tableTrack . '(
-                      `id` int(11) NOT NULL AUTO_INCREMENT,
-                      `color` varchar(11) DEFAULT NULL,
-                      `conference_id` int(11) DEFAULT NULL,
-                      `updated_at` datetime DEFAULT NULL,
-                  PRIMARY KEY (`id`))';
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `color` varchar(11) DEFAULT NULL,
+                `conference_id` int(11) DEFAULT NULL,
+                `updated_at` datetime DEFAULT NULL,
+                PRIMARY KEY (`id`))';
 
         dbDelta($sql);
     }
@@ -716,13 +716,13 @@ function confapp_activate()
 
     if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableNameTrackTranslations) != $tableNameTrackTranslations) {
         $sql = 'CREATE TABLE ' . $tableNameTrackTranslations . '(
-                      `id` int(11) NOT NULL AUTO_INCREMENT,
-                      `track_id` varchar(255) DEFAULT NULL,
-                      `conference_id` int(11) DEFAULT NULL,
-                      `updated_at` datetime DEFAULT NULL,
-                      `name` varchar(255) NOT NULL DEFAULT \'\',
-                      `locale` varchar(2) DEFAULT NULL,
-                  PRIMARY KEY (`id`))';
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `track_id` varchar(255) DEFAULT NULL,
+                `conference_id` int(11) DEFAULT NULL,
+                `updated_at` datetime DEFAULT NULL,
+                `name` varchar(255) NOT NULL DEFAULT \'\',
+                `locale` varchar(2) DEFAULT NULL,
+                PRIMARY KEY (`id`))';
 
         dbDelta($sql);
     }
@@ -731,12 +731,12 @@ function confapp_activate()
 
     if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableFloors) != $tableFloors) {
         $sql = 'CREATE TABLE ' . $tableFloors . '(
-                      `id` int(11) NOT NULL AUTO_INCREMENT,
-                      `conference_id` int(11) DEFAULT NULL,
-                      `avatar` varchar(255) DEFAULT NULL,
-                      `order` int(11) DEFAULT NULL,
-                      `updated_at` datetime DEFAULT NULL,
-                  PRIMARY KEY (`id`))';
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `conference_id` int(11) DEFAULT NULL,
+                `avatar` varchar(255) DEFAULT NULL,
+                `order` int(11) DEFAULT NULL,
+                `updated_at` datetime DEFAULT NULL,
+                PRIMARY KEY (`id`))';
 
         dbDelta($sql);
     }
@@ -824,7 +824,7 @@ function getConfrenceDays()
     global $wpdb;
     $tablename = $wpdb->prefix . 'confapp_day';
     $tablenameLanguage = $wpdb->prefix . 'confapp_day_translations';
-    $language = getLang();
+    $language = getConfrenceLang();
 
     $results = $wpdb->get_results("
       SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale FROM $tablename
@@ -837,7 +837,7 @@ function getConfrenceDays()
           SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablenameLanguage.day_id =  $tablename.id
           AND $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
-    ");
+      ");
     }
 
     return $results;
@@ -852,7 +852,7 @@ function getConfrenceFloors()
     global $wpdb;
     $tablename = $wpdb->prefix . 'confapp_floors';
     $tablenameLanguage = $wpdb->prefix . 'confapp_floor_translations';
-    $language = getLang();
+    $language = getConfrenceLang();
 
     $results = $wpdb->get_results("
       SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale  FROM $tablename
@@ -865,7 +865,7 @@ function getConfrenceFloors()
           SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale  FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.floor_id
           AND  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
-    ");
+      ");
     }
 
     return $results;
@@ -887,7 +887,7 @@ function getConfrencePresentations($day)
     $tablenameSpekaer = $wpdb->prefix . 'confapp_speaker';
     $tablenameSpekaerTranslation = $wpdb->prefix . 'confapp_speaker_translations';
     $tablenameSpeeches = $wpdb->prefix . 'confapp_speaches';
-    $language = getLang();
+    $language = getConfrenceLang();
 
     $results = $wpdb->get_results("
       SELECT $tablename.*, $tablenameSpekaerTranslation.name as speaker_name,
@@ -920,7 +920,7 @@ function getConfrencePresentations($day)
           AND $tablenameSpekaerTranslation.locale = '{$confAppGeneral['default_language']}'
           WHERE $tablename.day_id = $day
           GROUP BY $tablename.id
-    ");
+      ");
     }
 
     return $results;
@@ -938,7 +938,7 @@ function getSpeaker($speakerId)
     global $wpdb;
     $tablename = $wpdb->prefix . 'confapp_speaker';
     $tablenameLanguage = $wpdb->prefix . 'confapp_speaker_translations';
-    $language = getLang();
+    $language = getConfrenceLang();
 
     $results = $wpdb->get_results("
       SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.description, $tablenameLanguage.locale FROM $tablename
@@ -953,7 +953,7 @@ function getSpeaker($speakerId)
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.speaker_id
           AND  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
           WHERE $tablename.id = $speakerId
-    ");
+      ");
     }
 
     return $results;
@@ -964,13 +964,13 @@ function getSpeaker($speakerId)
  *
  * @return mixed
  */
-function getTracks()
+function getConfrenceTracks()
 {
     global $confAppGeneral;
     global $wpdb;
     $tablename = $wpdb->prefix . 'confapp_track';
     $tablenameLanguage = $wpdb->prefix . 'confapp_track_translations';
-    $language = getLang();
+    $language = getConfrenceLang();
 
     $results = $wpdb->get_results("
       SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale FROM $tablename
@@ -983,7 +983,7 @@ function getTracks()
           SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.track_id
           AND  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
-    ");
+      ");
     }
 
     return $results;
@@ -1000,7 +1000,7 @@ function getConfrenceData()
     global $wpdb;
     $tablename = $wpdb->prefix . 'confapp_conferences';
     $tablenameLanguage = $wpdb->prefix . 'confapp_conference_translations';
-    $language = getLang();
+    $language = getConfrenceLang();
 
     $results = $wpdb->get_results("
       SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale FROM $tablename
@@ -1015,7 +1015,7 @@ function getConfrenceData()
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.conference_id
           AND  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
           LIMIT 1
-    ");
+      ");
     }
 
     return array_shift($results);
@@ -1026,7 +1026,7 @@ function getConfrenceData()
  *
  * @return string
  */
-function getLang()
+function getConfrenceLang()
 {
     return substr(get_locale(), 0, 2);
 }
