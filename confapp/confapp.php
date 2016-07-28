@@ -128,7 +128,7 @@ function confapp_admin_selection_default_language_callback()
 {
     global $confAppGeneral;
     global $wpdb;
-    $tablenameLanguage = $wpdb->prefix . 'conference_translations';
+    $tablenameLanguage = $wpdb->prefix . 'confapp_conference_translations';
     $results = $wpdb->get_results("SELECT locale FROM $tablenameLanguage");
     echo '<select name="default_language">';
     foreach ($results as $language) {
@@ -229,9 +229,10 @@ function synchronizeConference()
     $conferencesData = array_shift(
         getDataByCurl('conferences/' . $confAppGeneral['conference'] . '.json')
     );
+
     if ($conferencesData) {
         //add conference
-        $table = $wpdb->prefix . 'conferences';
+        $table = $wpdb->prefix . 'confapp_conferences';
         $wpdb->query("TRUNCATE TABLE  $table");
         $wpdb->insert(
             $table,
@@ -249,7 +250,7 @@ function synchronizeConference()
         );
 
         //add conference translations
-        $table = $wpdb->prefix . 'conference_translations';
+        $table = $wpdb->prefix . 'confapp_conference_translations';
         $wpdb->query("TRUNCATE TABLE $table");
         $conferencesLanguage = getDataByCurl(
             'conferences/' . $conferencesData['id'] .
@@ -275,8 +276,8 @@ function synchronizeConference()
     $daysData = getDataByCurl(
         'conferences/' . $confAppGeneral['conference'] . '/days.json'
     );
-    $table = $wpdb->prefix . 'day';
-    $tableTranslation = $wpdb->prefix . 'day_translations';
+    $table = $wpdb->prefix . 'confapp_day';
+    $tableTranslation = $wpdb->prefix . 'confapp_day_translations';
     $wpdb->query("TRUNCATE TABLE $tableTranslation");
     $wpdb->query("TRUNCATE TABLE $table");
     if ($daysData) {
@@ -316,8 +317,8 @@ function synchronizeConference()
 
     //synchronize floor
     $floors = getDataByCurl($confAppGeneral['conference'] . '/maps.json');
-    $table = $wpdb->prefix . 'floors';
-    $tableTranslation = $wpdb->prefix . 'floor_translations';
+    $table = $wpdb->prefix . 'confapp_floors';
+    $tableTranslation = $wpdb->prefix . 'confapp_floor_translations';
     $wpdb->query("TRUNCATE TABLE $table");
     $wpdb->query("TRUNCATE TABLE $tableTranslation");
     if ($floors) {
@@ -361,8 +362,8 @@ function synchronizeConference()
     $presentations = getDataByCurl(
         'conferences/' . $confAppGeneral['conference'] . '/presentations.json'
     );
-    $table = $wpdb->prefix . 'presentation';
-    $tableTranslation = $wpdb->prefix . 'presentation_translations';
+    $table = $wpdb->prefix . 'confapp_presentation';
+    $tableTranslation = $wpdb->prefix . 'confapp_presentation_translations';
     $wpdb->query("TRUNCATE TABLE $table");
     $wpdb->query("TRUNCATE TABLE $tableTranslation");
     if ($presentations) {
@@ -410,7 +411,7 @@ function synchronizeConference()
     $speeches = getDataByCurl(
         'conferences/' . $confAppGeneral['conference'] . '/speeches.json'
     );
-    $table = $wpdb->prefix . 'speaches';
+    $table = $wpdb->prefix . 'confapp_speaches';
     $wpdb->query("TRUNCATE TABLE $table");
     if ($speeches) {
         foreach ($speeches as $speech) {
@@ -430,8 +431,8 @@ function synchronizeConference()
     $speakers = getDataByCurl(
         'conferences/' . $confAppGeneral['conference'] . '/speakers.json'
     );
-    $table = $wpdb->prefix . 'speaker';
-    $tableTranslation = $wpdb->prefix . 'speaker_translations';
+    $table = $wpdb->prefix . 'confapp_speaker';
+    $tableTranslation = $wpdb->prefix . 'confapp_speaker_translations';
     $wpdb->query("TRUNCATE TABLE $table");
     $wpdb->query("TRUNCATE TABLE $tableTranslation");
     if ($speakers) {
@@ -479,8 +480,8 @@ function synchronizeConference()
     $tracks = getDataByCurl(
         'conferences/' . $confAppGeneral['conference'] . '/tracks.json'
     );
-    $table = $wpdb->prefix . 'track';
-    $tableTranslation = $wpdb->prefix . 'track_translations';
+    $table = $wpdb->prefix . 'confapp_track';
+    $tableTranslation = $wpdb->prefix . 'confapp_track_translations';
     $wpdb->query("TRUNCATE TABLE $table");
     $wpdb->query("TRUNCATE TABLE $tableTranslation");
     if ($tracks) {
@@ -556,7 +557,7 @@ function confapp_activate()
 
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
-    $tableNameConferences = $wpdb->prefix . 'conferences';
+    $tableNameConferences = $wpdb->prefix . 'confapp_conferences';
 
     if (
         $wpdb->get_var('SHOW TABLES LIKE ' . $tableNameConferences) != $tableNameConferences
@@ -577,7 +578,7 @@ function confapp_activate()
         dbDelta($sql);
     }
 
-    $tableNameConferenceTranslation = $wpdb->prefix . 'conference_translations';
+    $tableNameConferenceTranslation = $wpdb->prefix . 'confapp_conference_translations';
 
     if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableNameConferenceTranslation) != $tableNameConferenceTranslation) {
         $sql = 'CREATE TABLE ' . $tableNameConferenceTranslation . '(
@@ -592,7 +593,7 @@ function confapp_activate()
         dbDelta($sql);
     }
 
-    $tableNameDay = $wpdb->prefix . 'day';
+    $tableNameDay = $wpdb->prefix . 'confapp_day';
 
     if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableNameDay) != $tableNameDay) {
         $sql = 'CREATE TABLE ' . $tableNameDay . '(
@@ -605,7 +606,7 @@ function confapp_activate()
         dbDelta($sql);
     }
 
-    $tableNameDayTranslations = $wpdb->prefix . 'day_translations';
+    $tableNameDayTranslations = $wpdb->prefix . 'confapp_day_translations';
 
     if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableNameDayTranslations) != $tableNameDayTranslations) {
         $sql = 'CREATE TABLE ' . $tableNameDayTranslations . '(
@@ -619,7 +620,7 @@ function confapp_activate()
         dbDelta($sql);
     }
 
-    $tableNamePresentation = $wpdb->prefix . 'presentation';
+    $tableNamePresentation = $wpdb->prefix . 'confapp_presentation';
 
     if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableNamePresentation) != $tableNamePresentation) {
         $sql = 'CREATE TABLE ' . $tableNamePresentation . '(
@@ -637,7 +638,7 @@ function confapp_activate()
         dbDelta($sql);
     }
 
-    $tableNamePresentationTranslations = $wpdb->prefix . 'presentation_translations';
+    $tableNamePresentationTranslations = $wpdb->prefix . 'confapp_presentation_translations';
 
     if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableNamePresentationTranslations) != $tableNamePresentationTranslations) {
         $sql = 'CREATE TABLE ' . $tableNamePresentationTranslations . '(
@@ -652,7 +653,7 @@ function confapp_activate()
         dbDelta($sql);
     }
 
-    $tableNameSpeaker = $wpdb->prefix . 'speaker';
+    $tableNameSpeaker = $wpdb->prefix . 'confapp_speaker';
 
     if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableNameSpeaker) != $tableNameSpeaker) {
         $sql = 'CREATE TABLE ' . $tableNameSpeaker . '(
@@ -670,7 +671,7 @@ function confapp_activate()
         dbDelta($sql);
     }
 
-    $tableNameSpeakerTranslations = $wpdb->prefix . 'speaker_translations';
+    $tableNameSpeakerTranslations = $wpdb->prefix . 'confapp_speaker_translations';
 
     if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableNameSpeakerTranslations) != $tableNameSpeakerTranslations) {
         $sql = 'CREATE TABLE ' . $tableNameSpeakerTranslations . '(
@@ -685,7 +686,7 @@ function confapp_activate()
         dbDelta($sql);
     }
 
-    $tableNameSpeaches = $wpdb->prefix . 'speaches';
+    $tableNameSpeaches = $wpdb->prefix . 'confapp_speaches';
 
     if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableNameSpeaches) != $tableNameSpeaches) {
         $sql = 'CREATE TABLE ' . $tableNameSpeaches . '(
@@ -698,7 +699,7 @@ function confapp_activate()
         dbDelta($sql);
     }
 
-    $tableTrack = $wpdb->prefix . 'track';
+    $tableTrack = $wpdb->prefix . 'confapp_track';
 
     if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableTrack) != $tableTrack) {
         $sql = 'CREATE TABLE ' . $tableTrack . '(
@@ -711,7 +712,7 @@ function confapp_activate()
         dbDelta($sql);
     }
 
-    $tableNameTrackTranslations = $wpdb->prefix . 'track_translations';
+    $tableNameTrackTranslations = $wpdb->prefix . 'confapp_track_translations';
 
     if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableNameTrackTranslations) != $tableNameTrackTranslations) {
         $sql = 'CREATE TABLE ' . $tableNameTrackTranslations . '(
@@ -726,7 +727,7 @@ function confapp_activate()
         dbDelta($sql);
     }
 
-    $tableFloors = $wpdb->prefix . 'floors';
+    $tableFloors = $wpdb->prefix . 'confapp_floors';
 
     if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableFloors) != $tableFloors) {
         $sql = 'CREATE TABLE ' . $tableFloors . '(
@@ -740,7 +741,7 @@ function confapp_activate()
         dbDelta($sql);
     }
 
-    $tableNameFloorTranslations = $wpdb->prefix . 'floor_translations';
+    $tableNameFloorTranslations = $wpdb->prefix . 'confapp_floor_translations';
 
     if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableNameFloorTranslations) != $tableNameFloorTranslations) {
         $sql = 'CREATE TABLE ' . $tableNameFloorTranslations . '(
@@ -809,21 +810,21 @@ function getConfrenceDays()
 {
     global $confAppGeneral;
     global $wpdb;
-    $tablename = $wpdb->prefix . 'day';
-    $tablenameLanguage = $wpdb->prefix . 'day_translations';
+    $tablename = $wpdb->prefix . 'confapp_day';
+    $tablenameLanguage = $wpdb->prefix . 'confapp_day_translations';
     $language = getLang();
 
     $results = $wpdb->get_results("
-      SELECT * FROM $tablename
-      LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.day_id
-      WHERE  $tablenameLanguage.locale = '$language'
+      SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale FROM $tablename
+      LEFT JOIN $tablenameLanguage ON $tablenameLanguage.day_id =  $tablename.id
+      AND $tablenameLanguage.locale = '$language'
     ");
 
-    if (!$results) {
+    if (!isset($results['name']) || $results['name'] == null) {
         $results = $wpdb->get_results("
-          SELECT * FROM $tablename
-          LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.day_id
-          WHERE  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
+          SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale FROM $tablename
+          LEFT JOIN $tablenameLanguage ON $tablenameLanguage.day_id =  $tablename.id
+          AND $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
     ");
     }
 
@@ -837,23 +838,25 @@ function getConfrenceFloors()
 {
     global $confAppGeneral;
     global $wpdb;
-    $tablename = $wpdb->prefix . 'floors';
-    $tablenameLanguage = $wpdb->prefix . 'floor_translations';
+    $tablename = $wpdb->prefix . 'confapp_floors';
+    $tablenameLanguage = $wpdb->prefix . 'confapp_floor_translations';
     $language = getLang();
 
     $results = $wpdb->get_results("
-      SELECT * FROM $tablename
+      SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale  FROM $tablename
       LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.floor_id
-      WHERE  $tablenameLanguage.locale = '$language'
+      AND  $tablenameLanguage.locale = '$language'
     ");
 
-    if (!$results) {
+    if (!isset($results['name']) || $results['name'] == null) {
         $results = $wpdb->get_results("
-          SELECT * FROM $tablename
+          SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale  FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.floor_id
-          WHERE  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
+          AND  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
     ");
     }
+
+    return $results;
 }
 
 /**
@@ -863,40 +866,48 @@ function getConfrenceFloors()
  * @param $track
  * @return mixed
  */
-function getConfrencePresentations($day, $track)
+function getConfrencePresentations($day)
 {
     global $confAppGeneral;
     global $wpdb;
-    $tablename = $wpdb->prefix . 'presentation';
-    $tablenameLanguage = $wpdb->prefix . 'presentation_translations';
-    $tablenameSpekaer = $wpdb->prefix . 'speaker';
-    $tablenameSpekaerTranslation = $wpdb->prefix . 'speaker_translations';
-    $tablenameSpeeches = $wpdb->prefix . 'speaches';
+    $tablename = $wpdb->prefix . 'confapp_presentation';
+    $tablenameLanguage = $wpdb->prefix . 'confapp_presentation_translations';
+    $tablenameSpekaer = $wpdb->prefix . 'confapp_speaker';
+    $tablenameSpekaerTranslation = $wpdb->prefix . 'confapp_speaker_translations';
+    $tablenameSpeeches = $wpdb->prefix . 'confapp_speaches';
     $language = getLang();
 
     $results = $wpdb->get_results("
-      SELECT $tablename.*, $tablenameSpekaerTranslation.name FROM $tablename
+      SELECT $tablename.*, $tablenameSpekaerTranslation.name as speaker_name,
+             $tablenameLanguage.name, $tablenameLanguage.description,
+             $tablenameSpekaerTranslation.description as speaker_description,
+             $tablenameSpekaer.id as speaker_id
+      FROM $tablename
       LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.presentation_id
+      AND $tablenameLanguage.locale = '$language'
       LEFT JOIN $tablenameSpeeches ON $tablename.id = $tablenameSpeeches.presentation_id
       LEFT JOIN $tablenameSpekaer ON $tablenameSpeeches.speaker_id = $tablenameSpekaer.id
       LEFT JOIN $tablenameSpekaerTranslation ON $tablenameSpekaer.id = $tablenameSpekaerTranslation.speaker_id
       AND $tablenameSpekaerTranslation.locale ='$language'
-      WHERE  $tablenameLanguage.locale = '$language'
-      AND $tablename.day_id = $day
-      AND $tablename.track_id = $track
+      WHERE $tablename.day_id = $day
+      GROUP BY $tablename.id
     ");
 
-    if (!$results) {
+    if (!isset($results['name']) || $results['name'] == null) {
         $results = $wpdb->get_results("
-          SELECT $tablename.*, $tablenameSpekaerTranslation.name FROM $tablename
+          SELECT $tablename.*, $tablenameSpekaerTranslation.name as speaker_name,
+             $tablenameLanguage.name, $tablenameLanguage.description,
+             $tablenameSpekaerTranslation.description as speaker_description,
+             $tablenameSpekaer.id as speaker_id
+          FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.presentation_id
+          AND  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
           LEFT JOIN $tablenameSpeeches ON $tablename.id = $tablenameSpeeches.presentation_id
           LEFT JOIN $tablenameSpekaer ON $tablenameSpeeches.speaker_id = $tablenameSpekaer.id
           LEFT JOIN $tablenameSpekaerTranslation ON $tablenameSpekaer.id = $tablenameSpekaerTranslation.speaker_id
           AND $tablenameSpekaerTranslation.locale = '{$confAppGeneral['default_language']}'
-          WHERE  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
-          AND $tablename.day_id = $day
-          AND $tablename.track_id = $track
+          WHERE $tablename.day_id = $day
+          GROUP BY $tablename.id
     ");
     }
 
@@ -913,23 +924,23 @@ function getSpeaker($speakerId)
 {
     global $confAppGeneral;
     global $wpdb;
-    $tablename = $wpdb->prefix . 'speaker';
-    $tablenameLanguage = $wpdb->prefix . 'speaker_translations';
+    $tablename = $wpdb->prefix . 'confapp_speaker';
+    $tablenameLanguage = $wpdb->prefix . 'confapp_speaker_translations';
     $language = getLang();
 
     $results = $wpdb->get_results("
-      SELECT * FROM $tablename
+      SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.description, $tablenameLanguage.locale FROM $tablename
       LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.speaker_id
-      WHERE  $tablenameLanguage.locale = '$language'
-      AND $tablename.id = $speakerId
+      AND  $tablenameLanguage.locale = '$language'
+      WHERE $tablename.id = $speakerId
     ");
 
-    if (!$results) {
+    if (!isset($results['name']) || $results['name'] == null) {
         $results = $wpdb->get_results("
-          SELECT * FROM $tablename
+          SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.description, $tablenameLanguage.locale FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.speaker_id
-          WHERE  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
-          AND $tablename.id = $speakerId
+          AND  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
+          WHERE $tablename.id = $speakerId
     ");
     }
 
@@ -945,21 +956,21 @@ function getTracks()
 {
     global $confAppGeneral;
     global $wpdb;
-    $tablename = $wpdb->prefix . 'track';
-    $tablenameLanguage = $wpdb->prefix . 'track_translations';
+    $tablename = $wpdb->prefix . 'confapp_track';
+    $tablenameLanguage = $wpdb->prefix . 'confapp_track_translations';
     $language = getLang();
 
     $results = $wpdb->get_results("
-      SELECT * FROM $tablename
+      SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale FROM $tablename
       LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.track_id
-      WHERE  $tablenameLanguage.locale = '$language'
+      AND  $tablenameLanguage.locale = '$language'
     ");
 
-    if (!$results) {
+    if (!isset($results['name']) || $results['name'] == null) {
         $results = $wpdb->get_results("
-          SELECT * FROM $tablename
+          SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.track_id
-          WHERE  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
+          AND  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
     ");
     }
 
@@ -975,25 +986,26 @@ function getConfrenceData()
 {
     global $confAppGeneral;
     global $wpdb;
-    $tablename = $wpdb->prefix . 'conferences';
-    $tablenameLanguage = $wpdb->prefix . 'conference_translations';
+    $tablename = $wpdb->prefix . 'confapp_conferences';
+    $tablenameLanguage = $wpdb->prefix . 'confapp_conference_translations';
     $language = getLang();
 
     $results = $wpdb->get_results("
-      SELECT * FROM $tablename
+      SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale FROM $tablename
       LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.conference_id
-      WHERE  $tablenameLanguage.locale = '$language'
+      AND  $tablenameLanguage.locale = '$language'
       LIMIT 1
     ");
 
-    if (!$results) {
+    if (!isset($results['name']) || $results['name'] == null) {
         $results = $wpdb->get_results("
-          SELECT * FROM $tablename
+          SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.conference_id
-          WHERE  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
+          AND  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
           LIMIT 1
     ");
     }
+
     return array_shift($results);
 }
 
