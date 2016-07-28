@@ -315,39 +315,39 @@ function synchronizeConference()
         }
     }
 
-    //synchronize floor
-    $floors = getDataByCurl($confAppGeneral['conference'] . '/maps.json');
-    $table = $wpdb->prefix . 'confapp_floors';
-    $tableTranslation = $wpdb->prefix . 'confapp_floor_translations';
+    //synchronize maps
+    $maps = getDataByCurl($confAppGeneral['conference'] . '/maps.json');
+    $table = $wpdb->prefix . 'confapp_maps';
+    $tableTranslation = $wpdb->prefix . 'confapp_maps_translations';
     $wpdb->query("TRUNCATE TABLE $table");
     $wpdb->query("TRUNCATE TABLE $tableTranslation");
-    if ($floors) {
-        foreach ($floors as $floor) {
+    if ($maps) {
+        foreach ($maps as $map) {
             $wpdb->insert(
                 $table,
                 array(
-                    'id' => $floor['id'],
-                    'avatar' => $floor['url'],
-                    'order' => $floor['order'],
+                    'id' => $map['id'],
+                    'avatar' => $map['url'],
+                    'order' => $map['order'],
                     'conference_id' => $confAppGeneral['conference'],
                 )
             );
 
-            //add floor translatio
-            $floorLanguage = getDataByCurl(
+            //add map translatio
+            $mapLanguage = getDataByCurl(
                 'conferences/'
                 . $conferencesData['id']
-                . '/translations/floor_translations/'
-                . $floor['id']
-                . '/floor_id.json'
+                . '/translations/map_translations/'
+                . $map['id']
+                . '/map_id.json'
             );
-            if ($floorLanguage) {
-                foreach ($floorLanguage as $translation) {
+            if ($mapLanguage) {
+                foreach ($mapLanguage as $translation) {
                     $wpdb->insert(
                         $tableTranslation,
                         array(
                             'id' => $translation['id'],
-                            'floor_id' => $translation['floor_id'],
+                            'map_id' => $translation['map_id'],
                             'locale' => $translation['locale'],
                             'updated_at' => $translation['updated_at'],
                             'name' => $translation['name'],
@@ -727,10 +727,10 @@ function confapp_activate()
         dbDelta($sql);
     }
 
-    $tableFloors = $wpdb->prefix . 'confapp_floors';
+    $tableMaps = $wpdb->prefix . 'confapp_maps';
 
-    if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableFloors) != $tableFloors) {
-        $sql = 'CREATE TABLE ' . $tableFloors . '(
+    if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableMaps) != $tableMaps) {
+        $sql = 'CREATE TABLE ' . $tableMaps . '(
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `conference_id` int(11) DEFAULT NULL,
                 `avatar` varchar(255) DEFAULT NULL,
@@ -741,16 +741,16 @@ function confapp_activate()
         dbDelta($sql);
     }
 
-    $tableNameFloorTranslations = $wpdb->prefix . 'confapp_floor_translations';
+    $tableNameMapsTranslations = $wpdb->prefix . 'confapp_maps_translations';
 
-    if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableNameFloorTranslations) != $tableNameFloorTranslations) {
-        $sql = 'CREATE TABLE ' . $tableNameFloorTranslations . '(
-                  `id` int(11) NOT NULL AUTO_INCREMENT,
-                  `floor_id` int(11) DEFAULT NULL,
-                  `updated_at` datetime DEFAULT NULL,
-                  `locale` varchar(10) DEFAULT NULL,
-                  `name` varchar(255) DEFAULT NULL,
-                  PRIMARY KEY (`id`))';
+    if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableNameMapsTranslations) != $tableNameMapsTranslations) {
+        $sql = 'CREATE TABLE ' . $tableNameMapsTranslations . '(
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `map_id` int(11) DEFAULT NULL,
+                `updated_at` datetime DEFAULT NULL,
+                `locale` varchar(10) DEFAULT NULL,
+                `name` varchar(255) DEFAULT NULL,
+                PRIMARY KEY (`id`))';
 
         dbDelta($sql);
     }
@@ -844,26 +844,26 @@ function getConfrenceDays()
 }
 
 /**
- * Get Floors from database.
+ * Get Maps from database.
  */
-function getConfrenceFloors()
+function getConfrenceMaps()
 {
     global $confAppGeneral;
     global $wpdb;
-    $tablename = $wpdb->prefix . 'confapp_floors';
-    $tablenameLanguage = $wpdb->prefix . 'confapp_floor_translations';
+    $tablename = $wpdb->prefix . 'confapp_maps';
+    $tablenameLanguage = $wpdb->prefix . 'confapp_maps_translations';
     $language = getConfrenceLang();
 
     $results = $wpdb->get_results("
       SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale  FROM $tablename
-      LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.floor_id
+      LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.map_id
       AND  $tablenameLanguage.locale = '$language'
     ");
 
     if (!isset($results['name']) || $results['name'] == null) {
         $results = $wpdb->get_results("
           SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale  FROM $tablename
-          LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.floor_id
+          LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.map_id
           AND  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
       ");
     }
