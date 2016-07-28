@@ -358,6 +358,59 @@ function synchronizeConference()
         }
     }
 
+    //synchronize localizations
+    $localizations = getDataByCurl(
+        'conferences/' . $confAppGeneral['conference'] . '/localizations.json'
+    );
+    $table = $wpdb->prefix . 'confapp_localizations';
+    $tableTranslation = $wpdb->prefix . 'confapp_localizations_translations';
+    $wpdb->query("TRUNCATE TABLE $table");
+    $wpdb->query("TRUNCATE TABLE $tableTranslation");
+    if ($localizations) {
+        foreach ($localizations as $localization) {
+            $wpdb->insert(
+                $table,
+                array(
+                  'id' => $localization['id'],
+                  'name' => $localization['name'],
+                  'description' => $localization['description'],
+                  'address' => $localization['address'],
+                  'email' => $localization['email'],
+                  'phone' => $localization['phone'],
+                  'room' => $localization['room'],
+                  'lon' => $localization['lon'],
+                  'lat' => $localization['lat'],
+                  'localization_type_id' => $localization['localization_type_id'],
+                )
+            );
+
+            //add localization translatio
+            $localizationLanguage = getDataByCurl(
+                'conferences/'
+                . $conferencesData['id']
+                . '/translations/localization_translations/'
+                . $localization['id']
+                . '/localization_id.json'
+            );
+            if ($localizationLanguage) {
+                foreach ($localizationLanguage as $translation) {
+                    $wpdb->insert(
+                        $tableTranslation,
+                        array(
+                            'id' => $translation['id'],
+                            'localization_id' => $translation['localization_id'],
+                            'locale' => $translation['locale'],
+                            'created_at' => $translation['created_at'],
+                            'updated_at' => $translation['updated_at'],
+                            'name' => $translation['name'],
+                            'description' => $translation['description'],
+                        )
+                    );
+                }
+            }
+        }
+    }
+
     //synchronize presentation
     $presentations = getDataByCurl(
         'conferences/' . $confAppGeneral['conference'] . '/presentations.json'
@@ -754,6 +807,45 @@ function confapp_activate()
 
         dbDelta($sql);
     }
+
+
+    $tableLocalizations = $wpdb->prefix . 'confapp_localizations';
+
+    if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableLocalizations) != $tableLocalizations) {
+        $sql = 'CREATE TABLE ' . $tableLocalizations . '(
+                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `name` varchar(255) DEFAULT NULL,
+                  `description` text,
+                  `address` varchar(255) DEFAULT NULL,
+                  `email` varchar(255) DEFAULT NULL,
+                  `phone` varchar(255) DEFAULT NULL,
+                  `room` varchar(255) DEFAULT NULL,
+                  `lon` decimal(13,10) DEFAULT NULL,
+                  `lat` decimal(13,10) DEFAULT NULL,
+                  `localization_type_id` int(11) DEFAULT NULL,
+                  PRIMARY KEY (`id`)
+                )';
+
+        dbDelta($sql);
+    }
+
+    $tableNameLocalizationsTranslations = $wpdb->prefix . 'confapp_localizations_translations';
+
+    if ($wpdb->get_var('SHOW TABLES LIKE ' . $tableNameLocalizationsTranslations) != $tableNameLocalizationsTranslations) {
+        $sql = 'CREATE TABLE ' . $tableNameLocalizationsTranslations . '(
+                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `localization_id` int(11) NOT NULL,
+                  `locale` varchar(255) NOT NULL,
+                  `created_at` datetime DEFAULT NULL,
+                  `updated_at` datetime DEFAULT NULL,
+                  `name` varchar(255) DEFAULT NULL,
+                  `description` text,
+                  PRIMARY KEY (`id`)
+                )';
+
+        dbDelta($sql);
+    }
+
     confapp_theme_addititonal();
 
     add_option('confapp_database_version', '1.0');
@@ -983,6 +1075,36 @@ function getConfrenceTracks()
           SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.track_id
           AND  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
+      ");
+    }
+
+    return $results;
+}
+
+/**
+ * Get Localization data from database.
+ *
+ * @return mixed
+ */
+function getConfrenceLocalizations()
+{
+    global $confAppGeneral;
+    global $wpdb;
+    $tablename = $wpdb->prefix . 'confapp_localizations';
+    $tablenameLanguage = $wpdb->prefix . 'confapp_localizations_translations';
+    $language = getConfrenceLang();
+
+    $results = $wpdb->get_results("
+      SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.description, $tablenameLanguage.locale FROM $tablename
+      LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.localization_id
+      AND $tablenameLanguage.locale = '$language'
+    ");
+
+    if (!isset($results['name']) || $results['name'] == null) {
+        $results = $wpdb->get_results("
+          SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.description, $tablenameLanguage.locale FROM $tablename
+          LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.localization_id
+          AND $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
       ");
     }
 
