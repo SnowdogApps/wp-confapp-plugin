@@ -780,6 +780,18 @@ function confapp_theme_addititonal()
     }
 }
 
+function confapp_style () {
+    wp_enqueue_style( 'confapp', plugins_url( 'assets/css/confapp.css' , __FILE__ ) );
+}
+
+function confapp_script () {
+    wp_enqueue_script( 'confapp', plugins_url( 'assets/js/build/confapp.js' , __FILE__ ), array( 'jquery' ), '20160714', true  );
+}
+
+add_action('wp_enqueue_scripts','confapp_style');
+add_action('wp_enqueue_scripts','confapp_script');
+
+
 /**
  * Remove template.
  */

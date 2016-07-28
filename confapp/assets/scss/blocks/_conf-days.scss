@@ -1,0 +1,28 @@
+.conf-days {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.5rem;
+  @include max-screen($screen__s) {
+    font-size: 1.2rem;
+  }
+  &__item {
+    display: inline-block;
+    cursor: pointer;
+    margin: 15px;
+    &--selected {
+      color: $color-primary;
+      border-bottom: 1px solid $color-primary;
+    }
+  }
+  &__day {
+    @include min-screen($screen__s) {
+      display: inline-block;
+    }
+  }
+  &__date {
+    @include min-screen($screen__s) {
+      display: inline-block;
+      margin-left: 10px;
+    }
+  }
+}
