@@ -1,99 +1,68 @@
-var gulp         = require('gulp');
-var plumber      = require('gulp-plumber');
-var gulpif       = require('gulp-if');
-var notify       = require("gulp-notify");
-var gutil        = require('gulp-util');
-var sass         = require('gulp-sass');
-var sourcemaps   = require('gulp-sourcemaps');
-var postcss      = require('gulp-postcss');
-var uglify       = require('gulp-uglify');
-var browserSync  = require('browser-sync');
-var reload       = browserSync.reload;
-var eslint       = require('gulp-eslint');
-var logger       = require('gulp-logger');
-var runSequence  = require('run-sequence');
-var concat       = require('gulp-concat');
+'use strict';
+
+const gulp        = require('gulp'),
+      plumber     = require('gulp-plumber'),
+      gulpif      = require('gulp-if'),
+      notify      = require("gulp-notify"),
+      gutil       = require('gulp-util'),
+      sass        = require('gulp-sass'),
+      sourcemaps  = require('gulp-sourcemaps'),
+      postcss     = require('gulp-postcss'),
+      uglify      = require('gulp-uglify'),
+      browserSync = require('browser-sync').create(),
+      eslint      = require('gulp-eslint'),
+      logger      = require('gulp-logger'),
+      runSequence = require('run-sequence'),
+      concat      = require('gulp-concat');
 
 // PostCSS Plugins
-var autoprefixer = require('autoprefixer'),
-    stylelint    = require('stylelint'),
-    reporter     = require('postcss-reporter');
+const autoprefixer = require('autoprefixer'),
+      stylelint    = require('stylelint'),
+      reporter     = require('postcss-reporter');
 
-var esLintSettings = {
-    configFile: './.eslintrc'
-};
-
-gulp.task('default', ['dev', 'watch', 'watch-css-and-lint', 'scripts']);
+gulp.task('default', ['dev', 'watch']);
 
 // browser sync
-gulp.task('dev', function() {
-    browserSync({
+gulp.task('dev', () => {
+    browserSync.init({
         proxy: "confapp.dev"
     });
 });
 
 // watch tasks
-gulp.task('watch', function() {
-    gulp.watch('assets/scss/**', ['sass']);
-    gulp.watch(['assets/js/**', '**/*.php'], reload);
+gulp.task('watch', () => {
+    gulp.watch('assets/scss/*.scss', ['sass', 'css-lint']);
+    gulp.watch('assets/js/*.js', ['scripts']);
+    gulp.watch(['assets/js/*.js', '**/*.php'], browserSync.reload());
 });
 
 // compile SASS
-gulp.task('sass', function() {
+gulp.task('sass', () => {
     return gulp.src('assets/scss/*.scss')
-        .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
-        .pipe(gulpif(gutil.env.maps, sourcemaps.init()))
-        .pipe(sass({outputStyle: 'expanded', sourceComments: true}))
-        .pipe(postcss([autoprefixer({ browsers: ['> 1%', 'last 2 versions', 'not ie < 11', 'not OperaMini >= 5.0'] })]))
-        .pipe(gulpif(gutil.env.maps, sourcemaps.write()))
+        .pipe(plumber({
+            errorHandler: notify.onError("Error: <%= error.message %>")
+        }))
+        .pipe(gulpif(!gutil.env.maps, sourcemaps.init()))
+        .pipe(sass({
+            outputStyle: 'compressed'
+        }))
+        .pipe(postcss([autoprefixer({
+            browsers: ['> 1%', 'last 2 versions', 'not ie < 11', 'not OperaMini >= 5.0']
+        })]))
+        .pipe(gulpif(!gutil.env.maps, sourcemaps.write()))
         .pipe(gulp.dest('assets/css'))
-        .pipe(reload({stream: true}));
-});
-
-
-// watch and lint specified file
-gulp.task('eslint', function() {
-    if (gutil.env.file) {
-        gutil.log(gutil.colors.red.bold('gutil.env.file: ') + gutil.colors.green(gutil.env.file));
-        gulp.watch('assets/js' + gutil.env.file + '.js', function(event) {
-            gulp.src(event.path)
-                .pipe(plumber({errorHandler: notify.onError("ESLint found problems")}))
-                .pipe(logger({display: 'name'}))
-                .pipe(eslint(esLintSettings))
-                .pipe(eslint.format());
-        });
-    }
-    else {
-        gutil.log(gutil.colors.red.bold('ERROR: Specify file name, for example: ') + gutil.colors.green('gulp eslint --file formValidator-2.2.8'));
-    }
+        .pipe(browserSync.stream());
 });
 
 // lint and build custom scripts on changes
-gulp.task('scripts', function() {
-    gulp.watch('assets/js/dev/*.js', function(event) {
-        gulp.src(event.path)
-            .pipe(plumber({errorHandler: notify.onError("ESLint found problems")}))
-            .pipe(logger({display: 'name'}))
-            .pipe(eslint(esLintSettings))
-            .pipe(eslint.format())
-            .pipe(uglify())
-            .pipe(gulp.dest('assets/js/build/'));
-    });
-});
-
-// lint all css files
-gulp.task('watch-css-and-lint', function() {
-    gulp.watch('assets/css/*.css', function(event) {
-        gulp.src(event.path)
-            .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
-            .pipe(logger({display: 'name'}))
-            .pipe(postcss([
-                stylelint(),
-                reporter({
-                    clearMessages: true
-                })
-            ]));
-    });
+gulp.task('scripts', () => {
+    return gulp.src('assets/js/dev/*.js')
+        .pipe(plumber({
+            errorHandler: notify.onError("ESLint found problems")
+        }))
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(gulp.dest('assets/js/build/'));
 });
 
 gulp.task('css-lint', () => {
@@ -106,16 +75,9 @@ gulp.task('css-lint', () => {
         ]));
 });
 
-// build all JS
-gulp.task('uglify', function() {
-    return gulp.src('assets/js/dev/*.js')
-        .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
-        .pipe(logger({display: 'name'}))
-        .pipe(uglify())
-        .pipe(gulp.dest('assets/js/build/'));
-});
 
 // bulid release
-gulp.task('release', function() {
-    runSequence('styles', 'css-lint', 'uglify');
+gulp.task('release', () => {
+    gutil.env.maps = true;
+    runSequence('sass', 'scripts');
 });

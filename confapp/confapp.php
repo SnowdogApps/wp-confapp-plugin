@@ -860,7 +860,7 @@ function get_agenda_template()
 {
   include dirname( __FILE__ ) . '/agenda_template.php';
   wp_enqueue_style( 'confapp', plugins_url( 'assets/css/confapp.css' , __FILE__ ) );
-  wp_enqueue_script( 'confapp', plugins_url( 'assets/js/build/confapp.js' , __FILE__ ), array( 'jquery' ), '20160714', true  );
+  wp_enqueue_script( 'confapp', plugins_url( 'assets/js/confapp.js' , __FILE__ ), array( 'jquery' ), '20160801', true  );
 }
 
 /**
