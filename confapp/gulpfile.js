@@ -31,9 +31,11 @@ gulp.task('dev', () => {
 
 // watch tasks
 gulp.task('watch', () => {
-    gulp.watch('assets/scss/*.scss', ['sass', 'css-lint']);
-    gulp.watch('assets/js/*.js', ['scripts']);
-    gulp.watch(['assets/js/*.js', '**/*.php'], browserSync.reload());
+    gulp.watch('assets/scss/**/*.scss', ['sass', 'css-lint']);
+    gulp.watch('assets/js/**/*.js', ['scripts']);
+    gulp.watch(['assets/js/**/*.js', '**/*.php'], () => {
+      browserSync.reload();
+    });
 });
 
 // compile SASS
