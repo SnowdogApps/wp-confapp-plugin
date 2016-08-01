@@ -1,11 +1,4 @@
 .flag {
+  display: block;
   width: 32px;
-  height: 32px;
-  background: url(../images/flags.png) no-repeat;
-  &--gb {
-    background-position: -32px 0
-  }
-  &--pl {
-    background-position: 0 -32px
-  }
 }

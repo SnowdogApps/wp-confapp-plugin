@@ -1,5 +1,4 @@
 .conf-agenda {
-  display: none;
   margin: 25px 0;
   &--active {
     display: block;
@@ -61,22 +60,16 @@
 
   }
   &__language {
+    float: right;
     width: 40px;
-    height: 25px;
-    display: inline-block;
-    vertical-align: middle;
-    background-color: blue;
-    &--pl {
-      background: red;
-    }
   }
   &__room-type {
+    float: right;
     font-size: 0.7rem;
     line-height: 25px;
     padding: 0 25px;
     background-color: $color-gray-light;
     color: $color-gray-dark;
     text-align: center;
-    display: inline-block;
   }
 }

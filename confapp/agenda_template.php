@@ -85,7 +85,11 @@
                   </div>
               </div>
               <div class="conf-agenda__info">
-                  <div class="conf-agenda__language conf-agenda__language--<?= $presentation->locale ?>"></div>
+                  <div class="conf-agenda__language">
+                    <img src="<?= plugins_url('assets/images/flags/' . $presentation->locale . '.svg', __FILE__) ?>"
+                         alt="<?= $presentation->locale ?>"
+                    />
+                  </div>
                   <div class="conf-agenda__room-type">
                     <?= $presentation->localization_id ?>
                   </div>
