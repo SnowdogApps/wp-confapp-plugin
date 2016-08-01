@@ -1,3 +1,5 @@
+<?php defined( 'ABSPATH' ) or die( 'No script kiddies please!' ); ?>
+
 <?php
 /*
 Plugin Name: Snowdog_Confapp
@@ -852,58 +854,24 @@ function confapp_activate()
 }
 
 /**
- * Add template.
- *
- * @return bool
+ * Load agenda template and set static assets
  */
-function confapp_theme_addititonal()
+function get_agenda_template()
 {
-    $fileToAdd = ABSPATH . 'wp-content/plugins/confapp/confappTemplate.php';
-    $duplicatedDirFilename = get_template_directory() . '/confapp_pagetemplate.php';
-    if (copy($fileToAdd, $duplicatedDirFilename)) {
-        $data = file_get_contents($fileToAdd);
-        if ($data == false) {
-            return false;
-        }
-
-        $handle = fopen($duplicatedDirFilename, 'w');
-        fwrite($handle, $data);
-        fclose($handle);
-    }
+  include dirname( __FILE__ ) . '/agenda_template.php';
+  wp_enqueue_style( 'confapp', plugins_url( 'assets/css/confapp.css' , __FILE__ ) );
+  wp_enqueue_script( 'confapp', plugins_url( 'assets/js/build/confapp.js' , __FILE__ ), array( 'jquery' ), '20160714', true  );
 }
-
-function confapp_style () {
-    wp_enqueue_style( 'confapp', plugins_url( 'assets/css/confapp.css' , __FILE__ ) );
-}
-
-function confapp_script () {
-    wp_enqueue_script( 'confapp', plugins_url( 'assets/js/build/confapp.js' , __FILE__ ), array( 'jquery' ), '20160714', true  );
-}
-
-add_action('wp_enqueue_scripts','confapp_style');
-add_action('wp_enqueue_scripts','confapp_script');
-
 
 /**
- * Remove template.
+ * Register shortcode.
  */
-function confapp_theme_subtractextras()
-{
-    $fileToDelete = get_template_directory() .
-        'confapp_pagetemplate.' . strtolower(trim(get_current_theme())) . '.php';
-    $fh = fopen($fileToDelete, 'w') or die('can`t open file');
-    fclose($fh);
-    unlink($fileToDelete);
-}
+add_shortcode( 'conffapp_agenda', 'get_agenda_template' );
 
 /**
  * Activate module hook.
  */
 register_activation_hook(__FILE__, 'confapp_activate');
-/**
- * Uninstall module hook.
- */
-register_uninstall_hook(__FILE__, 'confapp_theme_subtractextras');
 
 /**
  * Get Days from database.
