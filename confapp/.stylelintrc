@@ -11,8 +11,8 @@ rules:
   no-browser-hacks:
     - true
     -
-      browsers: '> 1%, last 2 versions, not ie < 11, not OperaMini >= 5.0'
+      browsers: '> 1%, last 2 versions, not ie < 11, not OperaMini all'
   no-unsupported-browser-features:
     - true
     -
-      browsers: '> 1%, last 2 versions, not ie < 11, not OperaMini >= 5.0'
+      browsers: '> 1%, last 2 versions, not ie < 11, not OperaMini all'

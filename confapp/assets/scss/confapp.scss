@@ -3,9 +3,15 @@
 
 // Mixins
 @import "mixins/media-queries";
+@import "mixins/clearfix";
+
+// Global styles
+@import "global";
 
 // BEM Blocks
 @import "blocks/conf-agenda";
 @import "blocks/conf-days";
-@import "blocks/conf-room";
-@import "blocks/flags";
+@import "blocks/conf-filters-wrapper";
+@import "blocks/conf-filters-dropdown-trigger";
+@import "blocks/conf-filters-dropdown";
+@import "blocks/conf-filter";

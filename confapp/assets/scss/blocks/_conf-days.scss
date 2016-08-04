@@ -1,28 +1,33 @@
 .conf-days {
-  text-align: center;
-  margin: 20px 0;
-  font-size: 1.5rem;
-  @include max-screen($screen__s) {
-    font-size: 1.2rem;
-  }
+	margin-bottom: 20px;
+	text-align: center;
+	@include min-screen($screen__m + 1) {
+		float: left;
+		text-align: left;
+	}
   &__item {
-    display: inline-block;
-    cursor: pointer;
-    margin: 15px;
+		padding: 0 20px;
+		margin: 0;
+		line-height: 48px;
+		text-align: center;
+		text-transform: none;
+		background: transparent;
+		outline: none;
+		color: $color-gray-dark;
+		@include min-screen($screen__m + 1) {
+			float: left;
+			min-width: 150px;
+		}
+		&:hover,
+		&:active,
+		&:focus {
+			color: $color-primary;
+			background: transparent;
+			outline: none;
+		}
     &--selected {
       color: $color-primary;
-      border-bottom: 1px solid $color-primary;
-    }
-  }
-  &__day {
-    @include min-screen($screen__s) {
-      display: inline-block;
-    }
-  }
-  &__date {
-    @include min-screen($screen__s) {
-      display: inline-block;
-      margin-left: 10px;
+      border-bottom: 2px solid $color-primary;
     }
   }
 }

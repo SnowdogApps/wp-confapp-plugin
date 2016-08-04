@@ -3,104 +3,216 @@
  * ConfApp Agenda Template
  */
 ?>
-
-<?php
-  $days = getConfrenceDays();
-  $tracks = getConfrenceTracks();
-  $localizations = getConfrenceLocalizations();
-
-  function getTrackName($tracks, $trackId) {
-    foreach ($tracks as $track) {
-      return $track->id === $trackId ? $track->name : false;
-    }
-  }
-?>
-
-
-<ul class="conf-tracks">
-  <li class="conf-tracks__item conf-tracks__item--selected" data-filter="all">
-    All tracks
-  </li>
-  <?php foreach ($tracks as $track): ?>
-    <li class="conf-tracks__item" data-track-filter="<?= $track->id ?>">
-      <?= $track->name ?>
-    </li>
-  <?php endforeach; ?>
-</ul>
-
-<ul class="conf-room">
-  <li class="conf-room__item conf-room__item--selected" data-room-filter="all">
-    All rooms
-  </li>
-  <?php foreach ($localizations as $localization): ?>
-    <li class="conf-room__item" data-room-filter="<?= $localization->id ?>">
-      <?= $localization->name ?>
-    </li>
-  <?php endforeach; ?>
-</ul>
-
-<div class="conf-days">
-  <?php foreach ($days as $day): ?>
-    <button class="conf-days__item" data-day-filter="<?= $day->date; ?>">
-      <?= $day->date; ?> / <?= $day->name; ?>
-    </button>
-  <?php endforeach; ?>
-</div>
-
-<?php foreach ($days as $day): ?>
-  <ul class="conf-agenda" data-day="<?= $day->date ?>">
-    <?php $presentationsByDate = []; ?>
+<div class="confapp-agenda-wrapper">
     <?php
-      foreach (getConfrencePresentations($day->id) as $presentation) {
-        if ($presentationsByDate[$presentation->date]) {
-          array_push($presentationsByDate[$presentation->date], $presentation);
+        $days          = getConfrenceDays();
+        $langs         = getConfrenceLangs();
+        $tracks        = getConfrenceTracks();
+        $localizations = getConfrenceLocalizations();
+
+        function sortData(&$data, $key) {
+            usort($data, function($a, $b) use ($key) {
+                return strcmp($a->$key, $b->$key);
+            });
         }
-        else {
-          $presentationsByDate[$presentation->date] = [$presentation];
-        }
-      }
+
+        sortData($days, 'date');
+        sortData($langs, 'locale');
+        sortData($tracks, 'name');
+        sortData($localizations, 'name');
+
+        $getTrackDetails = function ($trackId) use ($tracks)
+        {
+            foreach ($tracks as $track) {
+                if ($track->id === $trackId ) {
+                    return (object) array(
+                        "name" => $track->name,
+                        "color" => $track->color
+                    );
+                }
+            }
+            return false;
+        };
+
+        $getLocalizationName = function ($localizationId) use ($localizations)
+        {
+            foreach ($localizations as $localization) {
+                if ($localization->id === $localizationId) {
+                    return $localization->name;
+                }
+            }
+            return false;
+        };
     ?>
-    <?php ksort($presentationsByDate); ?>
 
-    <?php foreach ($presentationsByDate as $date => $presentationsInSameTime): ?>
-      <li class="conf-agenda__item">
-        <?php foreach ($presentationsInSameTime as $key => $presentation): ?>
-          <pre>
-            <?php print_r($presentation); ?>
-          </pre>
+    <?php if (sizeof($days) > 1): ?>
+        <div class="conf-days">
+            <?php foreach ($days as $index => $day): ?>
+                <button type="button"
+                        class="conf-days__item <?= $index === 0 ? 'conf-days__item--selected' : ''; ?>"
+                        data-day-filter="<?= $day->date; ?>"
+                        title="<?= __('Day') . ' ' . ($index + 1) . ' - ' . $day->date ?>"
+                >
+                    <?= __('Day') . '&nbsp;' . ($index + 1) ?>
+                </button>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 
-          <div class="conf-agenda__row"
-               data-room=""
-               data-track="<?= $presentation->track_id ?>"
-          >
-              <div class="conf-agenda__hour">
-                <?= date_format(date_create($date), 'H:i'); ?>
-              </div>
-              <div class="conf-agenda__presentation">
-                  <div class="conf-agenda__presentation-subject">
-                    Magento 2
-                  </div>
-                  <div class="conf-agenda__presentation-speaker">
-                    Ben Marks
-                  </div>
-              </div>
-              <div class="conf-agenda__info">
-                  <div class="conf-agenda__language">
-                    <img src="<?= plugins_url('assets/images/flags/' . $presentation->locale . '.svg', __FILE__) ?>"
-                         alt="<?= $presentation->locale ?>"
-                    />
-                  </div>
-                  <div class="conf-agenda__room-type">
-                    <?= $presentation->localization_id ?>
-                  </div>
+    <div class="conf-filters-wrapper">
+        <button type="button" class="conf-filters-dropdown-trigger">
+            <span class="conf-filters-dropdown-trigger__icon">
+                <?php include 'assets/images/conf-filters-dropdown-trigger.svg'; ?>
+            </span>
+            <?= __('Filter') ?>
+        </button>
 
-                  <div class="conf-agenda__track-type">
-                    <?= getTrackName($tracks, $presentation->track_id) ?>
-                  </div>
-              </div>
-          </div>
-        <?php endforeach; ?>
-      </li>
+        <div class="conf-filters-dropdown">
+            <?php if (sizeof($tracks) > 1): ?>
+                <div class="conf-filter conf-filter--tracks">
+                    <h2 class="conf-filter__label">
+                        <?= __('Tracks') ?>
+                    </h2>
+                    <button class="conf-filter__item conf-filter__item--selected"
+                            data-track-filter="all"
+                    >
+                        <?= __('All') ?>
+                    </button>
+                    <?php foreach ($tracks as $track): ?>
+                        <button class="conf-filter__item"
+                                data-track-filter="<?= $track->id ?>"
+                        >
+                            <span class="conf-filter__item-color"
+                                  style="background-color: <?= $track->color ?>"
+                            >
+                                &nbsp;
+                            </span>
+                            <?= $track->name ?>
+                        </button>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if (sizeof($localizations) > 1): ?>
+                <div class="conf-filter conf-filter--localizations">
+                    <h2 class="conf-filter__label">
+                        <?= __('Localizations') ?>
+                    </h2>
+                    <button type="button"
+                            class="conf-filter__item conf-filter__item--selected"
+                            data-Localization-filter="all"
+                    >
+                        <?= __('All') ?>
+                    </button>
+                    <?php foreach ($localizations as $localization): ?>
+                        <button type="button"
+                                class="conf-filter__item"
+                                data-Localization-filter="<?= $localization->id ?>"
+                        >
+                            <?= $localization->name ?>
+                        </button>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if (sizeof($langs) > 1): ?>
+                <div class="conf-filter conf-filter--languages">
+                    <h2 class="conf-filter__label">
+                        <?= __('Languages') ?>
+                    </h2>
+                    <button type="button"
+                            class="conf-filter__item conf-filter__item--selected"
+                            data-lang-filter="all"
+                    >
+                        <?= __('All') ?>
+                    </button>
+                    <?php foreach ($langs as $lang): ?>
+                        <button type="button"
+                                class="conf-filter__item"
+                                data-lang-filter="<?= $lang->locale ?>"
+                        >
+                            <img src="<?= plugins_url('assets/images/flags/' . $lang->locale . '.svg', __FILE__) ?>"
+                                 alt="<?= $presentation->locale ?>"
+                            />
+                        </button>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+
+
+
+
+    <?php foreach ($days as $day): ?>
+        <ul class="conf-agenda"
+            <?= sizeof($days) > 1 ? 'data-day="'. $day->date . '"' : ''; ?>
+        >
+            <?php $presentationsByDate = []; ?>
+            <?php
+                foreach (getConfrencePresentations($day->id) as $presentation) {
+                    if ($presentationsByDate[$presentation->date]) {
+                        array_push($presentationsByDate[$presentation->date], $presentation);
+                    }
+                    else {
+                        $presentationsByDate[$presentation->date] = [$presentation];
+                    }
+                }
+            ?>
+            <?php ksort($presentationsByDate); ?>
+
+            <?php foreach ($presentationsByDate as $date => $presentationsInSameTime): ?>
+                <li class="conf-agenda__item">
+                    <?php foreach ($presentationsInSameTime as $key => $presentation): ?>
+                        <!-- <pre>
+                            <?php print_r($presentation); ?>
+                        </pre> -->
+
+                        <div class="conf-agenda__row"
+                             <?= sizeof($localizations) > 1 ? 'data-room="'. $presentation->localization_id . '"' : ''; ?>
+                             <?= sizeof($tracks) > 1 ? 'data-track="'. $presentation->track_id . '"' : ''; ?>
+                        >
+                            <div class="conf-agenda__hour">
+                                <?= date_format(date_create($date), 'H:i'); ?>
+                            </div>
+                            <div class="conf-agenda__presentation">
+                                <div class="conf-agenda__presentation-subject">
+                                    <?= $presentation->name ?>
+                                </div>
+                                <div class="conf-agenda__presentation-speaker">
+                                    <?= $presentation->speaker_name ?>
+                                </div>
+                            </div>
+                            <div class="conf-agenda__info">
+                                <div class="conf-agenda__info-item conf-agenda__info-item--language">
+                                    <img src="<?= plugins_url('assets/images/flags/' . $presentation->locale . '.svg', __FILE__) ?>"
+                                         alt="<?= $presentation->locale ?>"
+                                    />
+                                </div>
+
+                                <?php if (sizeof($tracks) > 1): ?>
+                                    <?php $track = $getTrackDetails($presentation->track_id); ?>
+                                    <div class="conf-agenda__info-item conf-agenda__info-item--track">
+                                        <span class="conf-agenda__info-item-color"
+                                              style="background-color: <?= $track->color ?>"
+                                        >
+                                            &nbsp;
+                                        </span>
+                                        <?= $track->name ?>
+                                    </div>
+                                <?php endif; ?>
+
+                                <?php if (sizeof($localizations) > 1): ?>
+                                    <div class="conf-agenda__info-item">
+                                        <?= $getLocalizationName($presentation->localization_id); ?>
+                                    </div>
+                                <?php endif; ?>
+
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
     <?php endforeach; ?>
-  </ul>
-<?php endforeach; ?>
+</div>

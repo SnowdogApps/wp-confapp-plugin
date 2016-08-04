@@ -103,16 +103,16 @@ function confapp_admin_init()
         'confapp_admin_selection'
     );
     add_settings_field(
-        'confapp_admin_selection_default_language',
-        'Select default language',
-        'confapp_admin_selection_default_language_callback',
+        'confapp_admin_selection_conference',
+        'Select conference',
+        'confapp_admin_selection_conference_callback',
         'confapp_admin_page',
         'confapp_admin_selection'
     );
     add_settings_field(
-        'confapp_admin_selection_conference',
-        'Select conference',
-        'confapp_admin_selection_conference_callback',
+        'confapp_admin_selection_default_language',
+        'Select default language',
+        'confapp_admin_selection_default_language_callback',
         'confapp_admin_page',
         'confapp_admin_selection'
     );
@@ -859,8 +859,11 @@ function confapp_activate()
 function get_agenda_template()
 {
   include dirname( __FILE__ ) . '/agenda_template.php';
+
+
   wp_enqueue_style( 'confapp', plugins_url( 'assets/css/confapp.css' , __FILE__ ) );
-  wp_enqueue_script( 'confapp', plugins_url( 'assets/js/confapp.js' , __FILE__ ), array( 'jquery' ), '20160801', true  );
+  wp_enqueue_script( 'webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js', null, '1.6.16', true  );
+  wp_enqueue_script( 'confapp', plugins_url( 'assets/js/confapp.js' , __FILE__ ), array( 'jquery', 'webfont' ), '1.0', true  );
 }
 
 /**
@@ -1119,4 +1122,12 @@ function getConfrenceData()
 function getConfrenceLang()
 {
     return substr(get_locale(), 0, 2);
+}
+
+
+function getConfrenceLangs()
+{
+    global $wpdb;
+    $tableName = $wpdb->prefix . 'confapp_conference_translations';
+    return $wpdb->get_results("SELECT locale FROM $tableName");
 }
