@@ -184,11 +184,14 @@
                                 </div>
                             </div>
                             <div class="conf-agenda__info">
-                                <div class="conf-agenda__info-item conf-agenda__info-item--language">
-                                    <img src="<?= plugins_url('assets/images/flags/' . $presentation->locale . '.svg', __FILE__) ?>"
-                                         alt="<?= $presentation->locale ?>"
-                                    />
-                                </div>
+
+                                <?php if (sizeof($langs) > 1): ?>
+                                    <div class="conf-agenda__info-item conf-agenda__info-item--language">
+                                        <img src="<?= plugins_url('assets/images/flags/' . $presentation->locale . '.svg', __FILE__) ?>"
+                                             alt="<?= $presentation->locale ?>"
+                                        />
+                                    </div>
+                                <?php endif; ?>
 
                                 <?php if (sizeof($tracks) > 1): ?>
                                     <?php $track = $getTrackDetails($presentation->track_id); ?>
