@@ -31,7 +31,7 @@ jQuery(function($) {
                                 'track'       : 'all',
                                 'localization': 'all',
                                 'lang'        : 'all'
-                                };
+                            };
 
     function applyFilters(type, value) {
         var searchQuery = [];
