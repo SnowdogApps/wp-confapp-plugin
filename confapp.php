@@ -1,5 +1,4 @@
 <?php defined( 'ABSPATH' ) or die( 'No script kiddies please!' ); ?>
-
 <?php
 /*
 Plugin Name: Snowdog_Confapp
