@@ -12,6 +12,7 @@
 		text-align: center;
 		text-transform: none;
 		background: transparent;
+		border: none;
 		outline: none;
 		color: $color-gray-dark;
 		@include min-screen($screen__m + 1) {
