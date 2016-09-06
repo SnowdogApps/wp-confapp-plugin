@@ -9,13 +9,37 @@
     display: block;
     padding-left: 60px;
     margin-bottom: 20px;
+    overflow: hidden;
   }
   &__row {
 		width: 100%;
     padding: 10px 10px 0 10px;
-		margin: -1px;
     border: 1px solid $color-gray-light;
+		margin: -1px;
+		&:nth-child(2) {
+			margin-top: 0;
+		}
+		&:last-child {
+			margin-bottom: 0;
+		}
 		@include clearfix;
+		// TO DO
+		// &--track-15 {
+		// 	position: relative;
+		// 	&:after {
+		// 		content: '';
+		// 		position: absolute;
+		// 		right: 10px;
+		// 		bottom: 9px;
+		// 		width: 100px;
+		// 		height: 30px;
+		// 		opacity: 0.5;
+		// 		background-image: url(https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg);
+		// 		background-size: contain;
+		// 		background-repeat: no-repeat;
+		// 		background-position: right bottom;
+		// 	}
+		// }
   }
   &__hour {
 		position: absolute;

@@ -36,10 +36,6 @@
 
 	&--tracks {
 		.conf-filter {
-			button#{&}__item {
-				padding: 9px 10px;
-				@include clearfix;
-			}
 			&__item-color {
 				float: left;
 				height: 30px;
@@ -51,17 +47,17 @@
 
 	&--languages {
 		.conf-filter {
-			button#{&}__item {
+			&__item-icon {
+				display: block;
+				height: 40px;
+			}
+		}
+		button.conf-filter__item {
+			padding: 5px;
+			min-width: auto;
+			&:first-of-type {
 				padding: 10px;
-				min-width: auto;
-				&:first-of-type {
-					min-width: 100px;
-					padding: 9px 15px;
-				}
-				img {
-					display: block;
-					height: 28px;
-				}
+				min-width: 100px;
 			}
 		}
 	}

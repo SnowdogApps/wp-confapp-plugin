@@ -22,31 +22,55 @@ jQuery(function($) {
         }
     });
 
-    var confDays = $('.conf-days__item'),
-        confAgenda = $('.conf-agenda'),
-        confAgendaRow = $('.conf-agenda__row'),
-        confRoom = $('.conf-room__item');
+    var days                 = $('.conf-agenda'),
+        daysFitlerButtons    = $('.conf-days__item'),
+        filtersButtons       = $('.conf-filter__item'),
+        presentationsWrapper = $('.conf-agenda__item'),
+        presentations        = $('.conf-agenda__row'),
+        filters              = {
+                                'track'       : 'all',
+                                'localization': 'all',
+                                'lang'        : 'all'
+                            };
 
-    // confDays.click(function() {
-    //     var day = $(this).data('filter');
-    //     confDays.removeClass('conf-days__item--selected');
-    //     $(this).addClass('conf-days__item--selected');
-    //     confAgenda.removeClass('conf-agenda--active');
-    //     $('[data-day="' + day + '"]').addClass('conf-agenda--active');
-    // });
-    //
-    // confRoom.click(function() {
-    //     var room = $(this).data('filter');
-    //     if (room === 'all') {
-    //         confRoom.removeClass('conf-room__item--selected');
-    //         $(this).addClass('conf-room__item--selected');
-    //         confAgendaRow.removeClass('conf-agenda__row--hidden');
-    //     }
-    //     else {
-    //         confRoom.removeClass('conf-room__item--selected');
-    //         $(this).addClass('conf-room__item--selected');
-    //         confAgendaRow.addClass('conf-agenda__row--hidden');
-    //         $('[data-room="' + room + '"]').removeClass('conf-agenda__row--hidden');
-    //     }
-    // });
+    function applyFilters(type, value) {
+        var searchQuery = [];
+        filters[type] = value;
+
+        Object.keys(filters).forEach(function(filter) {
+            if (filters[filter] !== 'all') {
+                searchQuery.push('[data-' + filter +'="' + filters[filter] + '"]');
+            }
+        });
+        if (searchQuery.length > 0) {
+            presentationsWrapper.css('display', 'none');
+            presentations.css('display', 'none');
+
+            presentations.filter(searchQuery.join('')).parent('.conf-agenda__item').css('display', 'block');
+            presentations.filter(searchQuery.join('')).css('display', 'block');
+        }
+        else {
+            presentationsWrapper.css('display', 'block');
+            presentations.css('display', 'block');
+        }
+    }
+
+    days.css('display', 'none');
+    days.first().css('display', 'block');
+
+    daysFitlerButtons.click(function(event) {
+        days.css('display', 'none');
+        days.filter('[data-day="' + $(this).data('day-filter') + '"]').css('display', 'block');
+        daysFitlerButtons.removeClass('conf-days__item--selected');
+        $(this).addClass('conf-days__item--selected');
+    });
+
+    Object.keys(filters).forEach(function(filter) {
+        var buttons = filtersButtons.filter('[data-' + filter + '-filter]');
+        buttons.click(function(event) {
+            buttons.removeClass('conf-filter__item--selected');
+            $(this).addClass('conf-filter__item--selected');
+            applyFilters(filter, $(this).data(filter + '-filter'));
+        });
+    });
 });

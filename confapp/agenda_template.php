@@ -100,14 +100,14 @@
                     </h2>
                     <button type="button"
                             class="conf-filter__item conf-filter__item--selected"
-                            data-Localization-filter="all"
+                            data-localization-filter="all"
                     >
                         <?= __('All') ?>
                     </button>
                     <?php foreach ($localizations as $localization): ?>
                         <button type="button"
                                 class="conf-filter__item"
-                                data-Localization-filter="<?= $localization->id ?>"
+                                data-localization-filter="<?= $localization->id ?>"
                         >
                             <?= $localization->name ?>
                         </button>
@@ -131,7 +131,8 @@
                                 class="conf-filter__item"
                                 data-lang-filter="<?= $lang->locale ?>"
                         >
-                            <img src="<?= plugins_url('assets/images/flags/' . $lang->locale . '.svg', __FILE__) ?>"
+                            <img class="conf-filter__item-icon"
+                                 src="<?= plugins_url('assets/images/flags/' . $lang->locale . '.svg', __FILE__) ?>"
                                  alt="<?= $presentation->locale ?>"
                             />
                         </button>
@@ -140,9 +141,6 @@
             <?php endif; ?>
         </div>
     </div>
-
-
-
 
     <?php foreach ($days as $day): ?>
         <ul class="conf-agenda"
@@ -164,23 +162,26 @@
             <?php foreach ($presentationsByDate as $date => $presentationsInSameTime): ?>
                 <li class="conf-agenda__item">
                     <?php foreach ($presentationsInSameTime as $key => $presentation): ?>
-                        <!-- <pre>
-                            <?php print_r($presentation); ?>
-                        </pre> -->
+                        <?php $_speaker = getSpeaker($presentation->speaker_id)[0]; ?>
+
+                        <div class="conf-agenda__hour">
+                            <?= date_format(date_create($date), 'H:i'); ?>
+                        </div>
+                        <!-- TO DO -->
+                        <!-- <?= $presentation->track_id === '15' ? 'conf-agenda__row--track-' . $presentation->track_id : ''; ?> -->
 
                         <div class="conf-agenda__row"
-                             <?= sizeof($localizations) > 1 ? 'data-room="'. $presentation->localization_id . '"' : ''; ?>
+                             <?= sizeof($localizations) > 1 ? 'data-localization="'. $presentation->localization_id . '"' : ''; ?>
                              <?= sizeof($tracks) > 1 ? 'data-track="'. $presentation->track_id . '"' : ''; ?>
+                             <?= sizeof($langs) > 1 ? 'data-lang="'. $presentation->locale . '"' : ''; ?>
                         >
-                            <div class="conf-agenda__hour">
-                                <?= date_format(date_create($date), 'H:i'); ?>
-                            </div>
                             <div class="conf-agenda__presentation">
                                 <div class="conf-agenda__presentation-subject">
                                     <?= $presentation->name ?>
                                 </div>
                                 <div class="conf-agenda__presentation-speaker">
-                                    <?= $presentation->speaker_name ?>
+                                    <?= $_speaker->name ?>
+                                    <?= $_speaker->company ? ' - ' . $_speaker->company : ''; ?>
                                 </div>
                             </div>
                             <div class="conf-agenda__info">
