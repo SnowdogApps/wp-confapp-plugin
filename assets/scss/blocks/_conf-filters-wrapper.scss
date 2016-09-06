@@ -1,0 +1,7 @@
+.conf-filters-wrapper {
+	position: relative;
+	@include min-screen($screen__m + 1) {
+		float: right;
+		margin-bottom: 20px;
+	}
+}

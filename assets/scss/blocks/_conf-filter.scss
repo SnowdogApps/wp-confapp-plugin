@@ -1,0 +1,64 @@
+.conf-filter {
+	margin-bottom: 20px;
+	&:last-of-type {
+		margin-bottom: 0;
+	}
+	@include clearfix;
+
+	&__label,
+	h2#{&}__label {
+		margin: 0 0 15px 0;
+		font-size: 15px;
+		font-weight: $font-weight-bold;
+		color: $color-gray-dark;
+		text-transform: uppercase;
+	}
+
+	button#{&}__item {
+		float: left;
+		min-width: 100px;
+		margin: 0 10px 10px 0;
+		padding: 9px 15px;
+		line-height: 30px;
+		font-size: 14px;
+		color: $color-gray-dark;
+		border: 1px solid $color-gray-dark;
+		outline: none;
+		background: transparent;
+		border-radius: 0;
+		transition: background 300ms ease-in-out;
+		&--selected {
+			color: $color-white;
+			background: $color-primary;
+			border-color: $color-primary;
+		}
+	}
+
+	&--tracks {
+		.conf-filter {
+			&__item-color {
+				float: left;
+				height: 30px;
+				width: 30px;
+				margin: 0 10px 0 0;
+			}
+		}
+	}
+
+	&--languages {
+		.conf-filter {
+			&__item-icon {
+				display: block;
+				height: 40px;
+			}
+		}
+		button.conf-filter__item {
+			padding: 5px;
+			min-width: auto;
+			&:first-of-type {
+				padding: 10px;
+				min-width: 100px;
+			}
+		}
+	}
+}

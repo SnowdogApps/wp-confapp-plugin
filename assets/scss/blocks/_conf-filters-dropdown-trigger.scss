@@ -1,0 +1,51 @@
+.conf-filters-dropdown-trigger {
+		width: 100%;
+		padding: 9px 15px;
+		line-height: 30px;
+		font-size: 16px;
+		text-align: center;
+		font-weight: $font-weight-bold;
+		color: $color-gray;
+		border: 1px solid $color-gray;
+		background: none;
+		@include min-screen($screen__m + 1) {
+			width: auto;
+		}
+		&:hover,
+		&:focus,
+		&:active {
+			color: $color-gray;
+			border: 1px solid $color-gray;
+			background: none;
+			outline: none;
+		}
+		&--is-open {
+			&,
+			&:hover,
+			&:focus,
+			&:active {
+				color: $color-gray-dark;
+				background: $color-gray-light;
+				border: 1px solid $color-gray-light;
+				.conf-filters-dropdown-trigger__icon {
+					svg {
+						fill: $color-gray-dark;
+					}
+				}
+			}
+		}
+
+
+	&__icon {
+		display: inline-block;
+		height: 20px;
+		margin: 5px 0;
+		vertical-align: top;
+		svg {
+			display: block;
+			height: 100%;
+			width: auto;
+			fill: $color-gray;
+		}
+	}
+}
