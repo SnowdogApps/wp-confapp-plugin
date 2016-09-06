@@ -848,8 +848,6 @@ function confapp_activate()
         dbDelta($sql);
     }
 
-    confapp_theme_addititonal();
-
     add_option('confapp_database_version', '1.0');
 }
 
