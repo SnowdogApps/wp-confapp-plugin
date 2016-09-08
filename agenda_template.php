@@ -163,8 +163,6 @@
                 <li class="conf-agenda__item">
                     <?php foreach ($presentationsInSameTime as $key => $presentation): ?>
                         <?php
-                            $_speaker = getSpeaker($presentation->speaker_id)[0];
-
                             preg_match("/(\[[a-z]{2}\]) (.*)/", $presentation->name, $_parsingResults);
                             if (count($_parsingResults) === 3) {
                                 $_presentationName = $_parsingResults[2];
@@ -189,10 +187,12 @@
                                 <div class="conf-agenda__presentation-subject">
                                     <?= $_presentationName ?>
                                 </div>
-                                <div class="conf-agenda__presentation-speaker">
-                                    <?= $_speaker->name ?>
-                                    <?= $_speaker->company ? ' - ' . $_speaker->company : ''; ?>
-                                </div>
+                                <?php foreach($presentation->speakers as $speaker): ?>
+                                    <div class="conf-agenda__presentation-speaker">
+                                        <?= $speaker->name ?>
+                                        <?= $speaker->company ? ' - ' . $speaker->company : ''; ?>
+                                    </div>
+                                <?php endforeach; ?>
                             </div>
                             <div class="conf-agenda__info">
 

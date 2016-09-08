@@ -892,7 +892,7 @@ function getConfrenceDays()
       AND $tablenameLanguage.locale = '$language'
     ");
 
-    if (!isset($results['name']) || $results['name'] == null) {
+    if (!isset($results[0]->name) || $results[0]->name == null) {
         $results = $wpdb->get_results("
           SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablenameLanguage.day_id =  $tablename.id
@@ -920,7 +920,7 @@ function getConfrenceMaps()
       AND  $tablenameLanguage.locale = '$language'
     ");
 
-    if (!isset($results['name']) || $results['name'] == null) {
+    if (!isset($results[0]->name) || $results[0]->name == null) {
         $results = $wpdb->get_results("
           SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale  FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.map_id
@@ -950,37 +950,50 @@ function getConfrencePresentations($day)
     $language = getConfrenceLang();
 
     $results = $wpdb->get_results("
-      SELECT $tablename.*, $tablenameSpekaerTranslation.name as speaker_name,
-             $tablenameLanguage.name, $tablenameLanguage.description, $tablenameLanguage.locale,
-             $tablenameSpekaerTranslation.description as speaker_description,
-             $tablenameSpekaer.id as speaker_id
+      SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.description, $tablenameLanguage.locale
       FROM $tablename
       LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.presentation_id
       AND $tablenameLanguage.locale = '$language'
-      LEFT JOIN $tablenameSpeeches ON $tablename.id = $tablenameSpeeches.presentation_id
-      LEFT JOIN $tablenameSpekaer ON $tablenameSpeeches.speaker_id = $tablenameSpekaer.id
-      LEFT JOIN $tablenameSpekaerTranslation ON $tablenameSpekaer.id = $tablenameSpekaerTranslation.speaker_id
-      AND $tablenameSpekaerTranslation.locale ='$language'
       WHERE $tablename.day_id = $day
       GROUP BY $tablename.id
     ");
 
-    if (!isset($results['name']) || $results['name'] == null) {
+    if (!isset($results[0]->name) || $results[0]->name == null) {
         $results = $wpdb->get_results("
-          SELECT $tablename.*, $tablenameSpekaerTranslation.name as speaker_name,
-             $tablenameLanguage.name, $tablenameLanguage.description, $tablenameLanguage.locale,
-             $tablenameSpekaerTranslation.description as speaker_description,
-             $tablenameSpekaer.id as speaker_id
+          SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.description, $tablenameLanguage.locale
           FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.presentation_id
           AND  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
-          LEFT JOIN $tablenameSpeeches ON $tablename.id = $tablenameSpeeches.presentation_id
-          LEFT JOIN $tablenameSpekaer ON $tablenameSpeeches.speaker_id = $tablenameSpekaer.id
-          LEFT JOIN $tablenameSpekaerTranslation ON $tablenameSpekaer.id = $tablenameSpekaerTranslation.speaker_id
-          AND $tablenameSpekaerTranslation.locale = '{$confAppGeneral['default_language']}'
           WHERE $tablename.day_id = $day
           GROUP BY $tablename.id
-      ");
+    ");
+    }
+
+    foreach ($results as $key => $result) {
+        $speaker = $wpdb->get_results("
+          SELECT $tablenameSpekaerTranslation.name, $tablenameSpekaerTranslation.description,
+                 $tablenameSpekaer.company
+          FROM $tablenameSpeeches
+          LEFT JOIN $tablenameSpekaer ON $tablenameSpekaer.id = $tablenameSpeeches.speaker_id
+          LEFT JOIN $tablenameSpekaerTranslation ON $tablenameSpekaerTranslation.speaker_id = $tablenameSpeeches.speaker_id
+          WHERE $tablenameSpeeches.presentation_id = $result->id
+          GROUP BY $tablenameSpekaer.id"
+        );
+
+        if (!isset($speaker[0]->name) || $speaker[0]->name == null) {
+            $speaker = $wpdb->get_results("
+          SELECT $tablenameSpekaerTranslation.name, $tablenameSpekaerTranslation.description,
+                 $tablenameSpekaer.company
+          FROM $tablenameSpeeches
+          LEFT JOIN $tablenameSpekaer ON $tablenameSpekaer.id = $tablenameSpeeches.speaker_id
+          LEFT JOIN $tablenameSpekaerTranslation ON $tablenameSpekaerTranslation.speaker_id = $tablenameSpeeches.speaker_id
+          AND $tablenameSpekaerTranslation.locale = '{$confAppGeneral['default_language']}'
+          WHERE $tablenameSpeeches.presentation_id = $result->id
+          GROUP BY $tablenameSpekaer.id"
+            );
+        }
+
+        $result->speakers = $speaker;
     }
 
     return $results;
@@ -1007,7 +1020,7 @@ function getSpeaker($speakerId)
       WHERE $tablename.id = $speakerId
     ");
 
-    if (!isset($results['name']) || $results['name'] == null) {
+    if (!isset($results[0]->name) || $results[0]->name == null) {
         $results = $wpdb->get_results("
           SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.description, $tablenameLanguage.locale FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.speaker_id
@@ -1038,7 +1051,7 @@ function getConfrenceTracks()
       AND  $tablenameLanguage.locale = '$language'
     ");
 
-    if (!isset($results['name']) || $results['name'] == null) {
+    if (!isset($results[0]->name) || $results[0]->name == null) {
         $results = $wpdb->get_results("
           SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.track_id
@@ -1068,7 +1081,7 @@ function getConfrenceLocalizations()
       AND $tablenameLanguage.locale = '$language'
     ");
 
-    if (!isset($results['name']) || $results['name'] == null) {
+    if (!isset($results[0]->name) || $results[0]->name == null) {
         $results = $wpdb->get_results("
           SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.description, $tablenameLanguage.locale FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.localization_id
@@ -1099,7 +1112,7 @@ function getConfrenceData()
       LIMIT 1
     ");
 
-    if (!isset($results['name']) || $results['name'] == null) {
+    if (!isset($results[0]->name) || $results[0]->name == null) {
         $results = $wpdb->get_results("
           SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.conference_id
