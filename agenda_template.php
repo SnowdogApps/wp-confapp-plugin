@@ -163,7 +163,7 @@
                 <li class="conf-agenda__item">
                     <?php foreach ($presentationsInSameTime as $key => $presentation): ?>
                         <?php
-                            $_speaker = getSpeaker($presentation->speaker_id);
+                            $_speaker = getSpeaker($presentation->speaker_id)[0];
 
                             preg_match("/(\[[a-z]{2}\]) (.*)/", $presentation->name, $_parsingResults);
                             if (count($_parsingResults) === 3) {
