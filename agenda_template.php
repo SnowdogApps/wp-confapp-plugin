@@ -169,15 +169,24 @@
                         </div>
                         <!-- TO DO -->
                         <!-- <?= $presentation->track_id === '15' ? 'conf-agenda__row--track-' . $presentation->track_id : ''; ?> -->
-
+                        <?php
+                            preg_match("/(\[[a-z]{2}\]) (.*)/", $presentation->name, $_parsingResults);
+                            if (count($_parsingResults) === 3) {
+                                $_presentationName = $_parsingResults[2];
+                                $_presentationLang = str_replace(["[","]"], "", $_parsingResults[1]);
+                            }
+                            else {
+                                $_presentationName = $presentation->name;
+                            }
+                        ?>
                         <div class="conf-agenda__row"
                              <?= sizeof($localizations) > 1 ? 'data-localization="'. $presentation->localization_id . '"' : ''; ?>
                              <?= sizeof($tracks) > 1 ? 'data-track="'. $presentation->track_id . '"' : ''; ?>
-                             <?= sizeof($langs) > 1 ? 'data-lang="'. $presentation->locale . '"' : ''; ?>
+                             <?= sizeof($langs) > 1 && $_presentationLang ? 'data-lang="'. $_presentationLang . '"' : ''; ?>
                         >
                             <div class="conf-agenda__presentation">
                                 <div class="conf-agenda__presentation-subject">
-                                    <?= $presentation->name ?>
+                                    <?= $_presentationName ?>
                                 </div>
                                 <div class="conf-agenda__presentation-speaker">
                                     <?= $_speaker->name ?>
@@ -186,10 +195,10 @@
                             </div>
                             <div class="conf-agenda__info">
 
-                                <?php if (sizeof($langs) > 1): ?>
+                                <?php if (sizeof($langs) > 1 && $_presentationLang): ?>
                                     <div class="conf-agenda__info-item conf-agenda__info-item--language">
-                                        <img src="<?= plugins_url('assets/images/flags/' . $presentation->locale . '.svg', __FILE__) ?>"
-                                             alt="<?= $presentation->locale ?>"
+                                        <img src="<?= plugins_url('assets/images/flags/' . $_presentationLang . '.svg', __FILE__) ?>"
+                                             alt="<?= $_presentationLang ?>"
                                         />
                                     </div>
                                 <?php endif; ?>
