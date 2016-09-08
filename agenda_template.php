@@ -146,8 +146,8 @@
         <ul class="conf-agenda"
             <?= sizeof($days) > 1 ? 'data-day="'. $day->date . '"' : ''; ?>
         >
-            <?php $presentationsByDate = []; ?>
             <?php
+                $presentationsByDate = [];
                 foreach (getConfrencePresentations($day->id) as $presentation) {
                     if ($presentationsByDate[$presentation->date]) {
                         array_push($presentationsByDate[$presentation->date], $presentation);
@@ -156,18 +156,15 @@
                         $presentationsByDate[$presentation->date] = [$presentation];
                     }
                 }
+                ksort($presentationsByDate);
             ?>
-            <?php ksort($presentationsByDate); ?>
 
             <?php foreach ($presentationsByDate as $date => $presentationsInSameTime): ?>
                 <li class="conf-agenda__item">
                     <?php foreach ($presentationsInSameTime as $key => $presentation): ?>
-                        <?php $_speaker = getSpeaker($presentation->speaker_id)[0]; ?>
-
-                        <div class="conf-agenda__hour">
-                            <?= date_format(date_create($date), 'H:i'); ?>
-                        </div>
                         <?php
+                            $_speaker = getSpeaker($presentation->speaker_id);
+
                             preg_match("/(\[[a-z]{2}\]) (.*)/", $presentation->name, $_parsingResults);
                             if (count($_parsingResults) === 3) {
                                 $_presentationName = $_parsingResults[2];
@@ -177,6 +174,11 @@
                                 $_presentationName = $presentation->name;
                             }
                         ?>
+
+                        <div class="conf-agenda__hour">
+                            <?= date_format(date_create($date), 'H:i'); ?>
+                        </div>
+
                         <div class="conf-agenda__row <?= 'conf-agenda__row--track-' . $presentation->track_id ?>"
                              <?= sizeof($localizations) > 1 ? 'data-localization="'. $presentation->localization_id . '"' : ''; ?>
                              <?= sizeof($tracks) > 1 ? 'data-track="'. $presentation->track_id . '"' : ''; ?>
