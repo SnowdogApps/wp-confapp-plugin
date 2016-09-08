@@ -172,6 +172,7 @@
                             }
                             else {
                                 $_presentationName = $presentation->name;
+                                $_presentationLang = null;
                             }
                         ?>
 
