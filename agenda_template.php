@@ -167,8 +167,6 @@
                         <div class="conf-agenda__hour">
                             <?= date_format(date_create($date), 'H:i'); ?>
                         </div>
-                        <!-- TO DO -->
-                        <!-- <?= $presentation->track_id === '15' ? 'conf-agenda__row--track-' . $presentation->track_id : ''; ?> -->
                         <?php
                             preg_match("/(\[[a-z]{2}\]) (.*)/", $presentation->name, $_parsingResults);
                             if (count($_parsingResults) === 3) {
@@ -179,7 +177,7 @@
                                 $_presentationName = $presentation->name;
                             }
                         ?>
-                        <div class="conf-agenda__row"
+                        <div class="conf-agenda__row <?= 'conf-agenda__row--track-' . $presentation->track_id ?>"
                              <?= sizeof($localizations) > 1 ? 'data-localization="'. $presentation->localization_id . '"' : ''; ?>
                              <?= sizeof($tracks) > 1 ? 'data-track="'. $presentation->track_id . '"' : ''; ?>
                              <?= sizeof($langs) > 1 && $_presentationLang ? 'data-lang="'. $_presentationLang . '"' : ''; ?>
