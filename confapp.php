@@ -947,10 +947,10 @@ function getConfrencePresentations($day)
     $tablenameSpekaer = $wpdb->prefix . 'confapp_speaker';
     $tablenameSpekaerTranslation = $wpdb->prefix . 'confapp_speaker_translations';
     $tablenameSpeeches = $wpdb->prefix . 'confapp_speaches';
-    $language = getLang();
+    $language = getConfrenceLang();
 
     $results = $wpdb->get_results("
-      SELECT $tablename.id, $tablenameLanguage.name, $tablenameLanguage.description, $tablenameLanguage.locale
+      SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.description, $tablenameLanguage.locale
       FROM $tablename
       LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.presentation_id
       AND $tablenameLanguage.locale = '$language'
@@ -960,7 +960,7 @@ function getConfrencePresentations($day)
 
     if (!isset($results['name']) || $results['name'] == null) {
         $results = $wpdb->get_results("
-          SELECT $tablename.id, $tablenameLanguage.name, $tablenameLanguage.description, $tablenameLanguage.locale
+          SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.description, $tablenameLanguage.locale
           FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.presentation_id
           AND  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
