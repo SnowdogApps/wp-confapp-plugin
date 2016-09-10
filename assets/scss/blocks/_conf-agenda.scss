@@ -10,18 +10,14 @@
     padding-left: 60px;
     margin-bottom: 20px;
     overflow: hidden;
+		border: 1px solid $color-gray-light;
   }
   &__row {
 		width: 100%;
+		margin: -1px 0;
     padding: 10px 10px 0 10px;
-    border: 1px solid $color-gray-light;
-		margin: -1px;
-		&:nth-child(2) {
-			margin-top: 0;
-		}
-		&:last-child {
-			margin-bottom: 0;
-		}
+		border-top: 1px solid $color-gray-light;
+    border-bottom: 1px solid $color-gray-light;
 		@include clearfix;
 		&--track-184 {
 			position: relative;
