@@ -227,9 +227,8 @@ function synchronizeConference()
     global $wpdb;
 
     //synchronize conference
-    $conferencesData = array_shift(
-        getDataByCurl('conferences/' . $confAppGeneral['conference'] . '.json')
-    );
+    $conferencesData = getDataByCurl('conferences/' . $confAppGeneral['conference'] . '.json');
+
 
     if ($conferencesData) {
         //add conference
