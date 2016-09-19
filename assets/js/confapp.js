@@ -73,4 +73,49 @@ jQuery(function($) {
             applyFilters(filter, $(this).data(filter + '-filter'));
         });
     });
+
+    function closest (num, arr) {
+         var mid,
+             lo = 0,
+             hi = arr.length - 1;
+
+         while (hi - lo > 1) {
+             mid = Math.floor ((lo + hi) / 2);
+             if (arr[mid] < num) {
+                 lo = mid;
+             } else {
+                 hi = mid;
+             }
+         }
+         if (num - arr[lo] <= arr[hi] - num) {
+             return arr[lo];
+         }
+         return arr[hi];
+     }
+
+    showCurrentTime();
+    setInterval(showCurrentTime, 60000);
+
+    function showCurrentTime() {
+        var date = new Date(),
+            currentTime = date.getHours() + ':' + date.getMinutes(),
+            currentDay = date.getFullYear() + '-'
+                        + (date.getMonth() + 1 < 10 ? '0' : '')
+                        + (date.getMonth() + 1) + '-'
+                        + (date.getDate() < 10 ? '0' : '')
+                        + date.getDate(),
+            currentDayWrapper = $('[data-day="' + currentDay + '"]'),
+            allHoursAvalivable = [];
+
+        currentDayWrapper.find('.conf-agenda__hour').each(function(index, el) {
+            allHoursAvalivable.push($.trim($(this).text()));
+        });
+
+        // Clear previeous data
+        currentDayWrapper.find('.conf-agenda__item').removeClass('conf-agenda__item--past conf-agenda__item--ongoing ');
+
+        var currentPresentationWrapper = currentDayWrapper.find('.conf-agenda__hour:contains(' + closest(currentTime, allHoursAvalivable) + ')').first().parents('.conf-agenda__item');
+        currentPresentationWrapper.prevAll().addClass('conf-agenda__item--past');
+        currentPresentationWrapper.addClass('conf-agenda__item--ongoing');
+    }
 });
