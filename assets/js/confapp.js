@@ -115,6 +115,7 @@ jQuery(function($) {
         currentDayWrapper.find('.conf-agenda__item').removeClass('conf-agenda__item--past conf-agenda__item--ongoing ');
 
         var currentPresentationWrapper = currentDayWrapper.find('.conf-agenda__hour:contains(' + closest(currentTime, allHoursAvalivable) + ')').first().parents('.conf-agenda__item');
+        currentPresentationWrapper = currentPresentationWrapper.prev();
         currentPresentationWrapper.prevAll().addClass('conf-agenda__item--past');
         currentPresentationWrapper.addClass('conf-agenda__item--ongoing');
     }
