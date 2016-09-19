@@ -11,6 +11,15 @@
     margin-bottom: 20px;
     overflow: hidden;
 		border: 1px solid $color-gray-light;
+		&--past {
+			opacity: 0.4;
+		}
+		&--ongoing {
+			.conf-agenda__hour {
+				background: #e74011;
+				color: #fff;
+			}
+		}
   }
   &__row {
 		width: 100%;
