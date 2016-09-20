@@ -149,18 +149,31 @@
             <?php
                 $presentationsByDate = [];
                 foreach (getConfrencePresentations($day->id) as $presentation) {
-                    if ($presentationsByDate[$presentation->date]) {
-                        array_push($presentationsByDate[$presentation->date], $presentation);
+                    $date                 = strtotime($presentation->date);
+                    $startTime            = date('H:i', $date);
+                    $fullStartDateAndTime = date('d-m-Y_H:i', $date);
+                    $endTime              = date('H:i', strtotime('+' . $presentation->duration . ' minutes', $date));
+                    $fullEndDateAndTime   = date('d-m-Y_H:i', strtotime('+' . $presentation->duration . ' minutes', $date));
+                    $fullDateAndTime      = $fullStartDateAndTime . '__' . $fullEndDateAndTime;
+
+                    $presentation->startTime = $startTime;
+                    $presentation->endTime = $endTime;
+
+                    if ($presentationsByDate[$fullDateAndTime]) {
+                        array_push($presentationsByDate[$fullDateAndTime], $presentation);
                     }
                     else {
-                        $presentationsByDate[$presentation->date] = [$presentation];
+                        $presentationsByDate[$fullDateAndTime] = [$presentation];
                     }
                 }
                 ksort($presentationsByDate);
             ?>
 
             <?php foreach ($presentationsByDate as $date => $presentationsInSameTime): ?>
-                <li class="conf-agenda__item">
+                <li class="conf-agenda__item"
+                    data-start-time="<?= $presentation->startTime ?>"
+                    data-end-time="<?= $presentation->endTime ?>"
+                >
                     <?php foreach ($presentationsInSameTime as $key => $presentation): ?>
                         <?php
                             preg_match("/(\[[a-z]{2}\]) (.*)/", $presentation->name, $_parsingResults);
@@ -174,8 +187,13 @@
                             }
                         ?>
 
-                        <div class="conf-agenda__hour">
-                            <?= date_format(date_create($date), 'H:i'); ?>
+                        <div class="conf-agenda__time-wrapper">
+                            <div class="conf-agenda__time conf-agenda__time--start">
+                                <?= $presentation->startTime ?>
+                            </div>
+                            <div class="conf-agenda__time conf-agenda__time--end">
+                                <?= $presentation->endTime ?>
+                            </div>
                         </div>
 
                         <div class="conf-agenda__row <?= 'conf-agenda__row--track-' . $presentation->track_id ?>"

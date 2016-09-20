@@ -31,7 +31,7 @@ jQuery(function($) {
                                 'track'       : 'all',
                                 'localization': 'all',
                                 'lang'        : 'all'
-                            };
+                               };
 
     function applyFilters(type, value) {
         var searchQuery = [];
@@ -74,49 +74,61 @@ jQuery(function($) {
         });
     });
 
-    function closest (num, arr) {
-         var mid,
-             lo = 0,
-             hi = arr.length - 1;
+    function markOngoingPressenations() {
+        var date                 = new Date(),
+            currentTime          = date.getHours() + ':'
+                                   + (date.getMinutes() < 10 ? '0' : '')
+                                   + date.getMinutes(),
+            currentDay           = date.getFullYear() + '-'
+                                   + (date.getMonth() + 1 < 10 ? '0' : '')
+                                   + (date.getMonth() + 1) + '-'
+                                   + (date.getDate() < 10 ? '0' : '')
+                                   + date.getDate(),
+            currentDayWrapper    = $('[data-day="' + currentDay + '"]'),
+            avalivableStartTimes = [],
+            avalivableEndTimes   = [];
 
-         while (hi - lo > 1) {
-             mid = Math.floor ((lo + hi) / 2);
-             if (arr[mid] < num) {
-                 lo = mid;
-             } else {
-                 hi = mid;
-             }
-         }
-         if (num - arr[lo] <= arr[hi] - num) {
-             return arr[lo];
-         }
-         return arr[hi];
-     }
-
-    showCurrentTime();
-    setInterval(showCurrentTime, 60000);
-
-    function showCurrentTime() {
-        var date = new Date(),
-            currentTime = date.getHours() + ':' + date.getMinutes(),
-            currentDay = date.getFullYear() + '-'
-                        + (date.getMonth() + 1 < 10 ? '0' : '')
-                        + (date.getMonth() + 1) + '-'
-                        + (date.getDate() < 10 ? '0' : '')
-                        + date.getDate(),
-            currentDayWrapper = $('[data-day="' + currentDay + '"]'),
-            allHoursAvalivable = [];
-
-        currentDayWrapper.find('.conf-agenda__hour').each(function(index, el) {
-            allHoursAvalivable.push($.trim($(this).text()));
+        // Build avaliabce start and end times arrays
+        currentDayWrapper.find('.conf-agenda__item').each(function(index, el) {
+            avalivableStartTimes.push($(this).data('start-time'));
+            avalivableEndTimes.push($(this).data('end-time'));
         });
 
-        // Clear previeous data
-        currentDayWrapper.find('.conf-agenda__item').removeClass('conf-agenda__item--past conf-agenda__item--ongoing ');
+        avalivableStartTimes.sort().reverse();
+        avalivableEndTimes.sort();
 
-        var currentPresentationWrapper = currentDayWrapper.find('.conf-agenda__hour:contains(' + closest(currentTime, allHoursAvalivable) + ')').first().parents('.conf-agenda__item');
-        currentPresentationWrapper = currentPresentationWrapper.prev();
-        currentPresentationWrapper.prevAll().addClass('conf-agenda__item--past');
-        currentPresentationWrapper.addClass('conf-agenda__item--ongoing');
-    }
+        // Clear previeous data
+        currentDayWrapper
+            .find('.conf-agenda__item')
+            .removeClass('conf-agenda__item--past conf-agenda__item--ongoing');
+
+        function findClosestStartTime(value) {
+            return value <= currentTime;
+        }
+
+        function findClosestEndTime(value) {
+            return value >= currentTime;
+        }
+
+        var closestStartTime      = avalivableStartTimes.find(findClosestStartTime),
+            closestEndTime        = avalivableEndTimes.find(findClosestEndTime)
+            clossestStartTimeElem = currentDayWrapper
+                .find('.conf-agenda__time--start:contains(' + closestStartTime + ')')
+                .parents('.conf-agenda__item'),
+            clossestEndTimeElem   = currentDayWrapper
+                .find('.conf-agenda__time--end:contains(' + closestEndTime + ')')
+                .parents('.conf-agenda__item');
+            ongoingPressenations  = clossestStartTimeElem.add(clossestEndTimeElem);
+
+         ongoingPressenations
+            .last()
+            .prevAll(ongoingPressenations)
+            .addClass('conf-agenda__item--past');
+         ongoingPressenations
+            .removeClass('conf-agenda__item--past')
+            .addClass('conf-agenda__item--ongoing');
+     }
+
+    markOngoingPressenations();
+    setInterval(markOngoingPressenations, 60000);
 });
