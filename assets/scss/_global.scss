@@ -1,10 +1,10 @@
 .confapp-agenda-wrapper {
-	display: block;
-	width: 100%;
-	@include clearfix;
-	* {
-		font-family: $font;
-		font-weight: $font-weight-regular;
-		box-sizing: border-box;
-	}
+    display: block;
+    width: 100%;
+    @include clearfix;
+    * {
+        font-family: $font;
+        font-weight: $font-weight-regular;
+        box-sizing: border-box;
+    }
 }
