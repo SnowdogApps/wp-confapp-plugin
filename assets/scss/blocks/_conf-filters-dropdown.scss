@@ -1,17 +1,17 @@
 .conf-filters-dropdown{
-	display: none;
-	position: absolute;
-	top: 48px;
-	right: 0;
-	width: 100%;
-	z-index: 10;
-	padding: 20px;
-	background-color: $color-white;
-	border: 5px solid $color-gray-light;
-	@include min-screen($screen__m + 1) {
-		width: 500px;
-	}
-	&--is-open {
-		display: block;
-	}
+    display: none;
+    position: absolute;
+    top: 48px;
+    right: 0;
+    width: 100%;
+    z-index: 10;
+    padding: 20px;
+    background-color: $color-white;
+    border: 5px solid $color-gray-light;
+    @include min-screen($screen__m + 1) {
+        width: 500px;
+    }
+    &--is-open {
+        display: block;
+    }
 }

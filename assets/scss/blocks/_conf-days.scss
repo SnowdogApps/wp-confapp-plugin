@@ -1,31 +1,31 @@
 .conf-days {
-	margin-bottom: 20px;
-	text-align: center;
-	@include min-screen($screen__m + 1) {
-		float: left;
-		text-align: left;
-	}
+  margin-bottom: 20px;
+  text-align: center;
+  @include min-screen($screen__m + 1) {
+    float: left;
+    text-align: left;
+  }
   &__item {
-		padding: 0 20px;
-		margin: 0;
-		line-height: 48px;
-		text-align: center;
-		text-transform: none;
-		background: transparent;
-		border: none;
-		outline: none;
-		color: $color-gray-dark;
-		@include min-screen($screen__m + 1) {
-			float: left;
-			min-width: 150px;
-		}
-		&:hover,
-		&:active,
-		&:focus {
-			color: $color-primary;
-			background: transparent;
-			outline: none;
-		}
+    padding: 0 20px;
+    margin: 0;
+    line-height: 48px;
+    text-align: center;
+    text-transform: none;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: $color-gray-dark;
+    @include min-screen($screen__m + 1) {
+      float: left;
+      min-width: 150px;
+    }
+    &:hover,
+    &:active,
+    &:focus {
+      color: $color-primary;
+      background: transparent;
+      outline: none;
+    }
     &--selected {
       color: $color-primary;
       border-bottom: 2px solid $color-primary;

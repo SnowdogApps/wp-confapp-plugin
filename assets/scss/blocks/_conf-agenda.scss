@@ -1,6 +1,6 @@
 .conf-agenda {
   margin: 25px 0;
-	@include clearfix;
+  @include clearfix;
   &--is-open {
     display: block;
   }
@@ -10,11 +10,11 @@
     padding-left: 60px;
     margin-bottom: 20px;
     overflow: hidden;
-		border: 1px solid $color-gray-light;
-		&--past {
-			opacity: 0.4;
-		}
-		&--ongoing {
+    border: 1px solid $color-gray-light;
+    &--past {
+      opacity: 0.4;
+    }
+    &--ongoing {
       border: 1px solid $color-primary;
       .conf-agenda__row {
         border-color: $color-primary;
@@ -25,112 +25,112 @@
           background-color: rgba(255, 255, 255, 0.2);
         }
       }
-			.conf-agenda__time-wrapper,
+      .conf-agenda__time-wrapper,
       .conf-agenda__time {
-				color: #fff;
+        color: #fff;
         background: $color-primary;
-			}
-		}
+      }
+    }
   }
   &__row {
-		width: 100%;
-		margin: -1px 0;
+    width: 100%;
+    margin: -1px 0;
     padding: 10px 10px 0 10px;
-		border-top: 1px solid $color-gray-light;
+    border-top: 1px solid $color-gray-light;
     border-bottom: 1px solid $color-gray-light;
-		@include clearfix;
-		&--track-184 {
-			position: relative;
-			&:after {
-				content: '';
-				position: absolute;
-				right: 10px;
-				bottom: 9px;
-				width: 100px;
-				height: 30px;
-				opacity: 0.5;
-				background-image: url(../images/ibm-logo.svg);
-				background-size: contain;
-				background-repeat: no-repeat;
-				background-position: right bottom;
-			}
-		}
+    @include clearfix;
+    &--track-184 {
+      position: relative;
+      &:after {
+        content: '';
+        position: absolute;
+        right: 10px;
+        bottom: 9px;
+        width: 100px;
+        height: 30px;
+        opacity: 0.5;
+        background-image: url(../images/ibm-logo.svg);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: right bottom;
+      }
+    }
   }
   &__time-wrapper {
-		position: absolute;
-		left: 0;
-		top: 0;
-		height: 100%;
-		width: 60px;
-    background-color: $color-gray-light;
-		&:before {
-			content: '';
-			position: absolute;
-			left: 0;
-			right: 0;
-			height: 90%;
-			width: 2px;
-			margin: auto;
-			background-color: rgba(0, 0, 0, 0.05);
-		}
-  }
-	&__time{
-		position: absolute;
+    position: absolute;
     left: 0;
-		width: 100%;
-		padding: 5px 10px;
-		font-size: 12px;
-		text-align: center;
-		color: $color-gray-dark;
-		background-color: $color-gray-light;
-		&--start {
-			top: 0;
-		}
-		&--end {
-			bottom: 0;
-		}
-	}
+    top: 0;
+    height: 100%;
+    width: 60px;
+    background-color: $color-gray-light;
+    &:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 90%;
+      width: 2px;
+      margin: auto;
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  }
+  &__time{
+    position: absolute;
+    left: 0;
+    width: 100%;
+    padding: 5px 10px;
+    font-size: 12px;
+    text-align: center;
+    color: $color-gray-dark;
+    background-color: $color-gray-light;
+    &--start {
+      top: 0;
+    }
+    &--end {
+      bottom: 0;
+    }
+  }
   &__presentation {
-		&-subject {
-	    font-weight: $font-weight-bold;
-			color: $color-dark;
-	  }
-	  &-speaker {
-			font-size: 12px;
-	    color: $color-gray-dark;
-	  }
-	}
+    &-subject {
+      font-weight: $font-weight-bold;
+      color: $color-dark;
+    }
+    &-speaker {
+      font-size: 12px;
+      color: $color-gray-dark;
+    }
+  }
   &__info {
-		margin-top: 15px;
-		@include clearfix;
-		&-item {
-			float: left;
-			margin: 0 10px 10px 0;
-			padding: 5px 15px;
-			font-size: 12px;
-			line-height: 20px;
-			font-weight: $font-weight-bold;
-			color: $color-gray;
-			background-color: $color-gray-light;
-			text-transform: uppercase;
-			&--language {
-				height: 30px;
-				padding: 0;
-				border: 1px solid $color-gray-light;
-				img{
-					display: block;
-					height: 100%;
-				}
-			}
-			&--track {
-				padding: 5px 10px 5px 5px;
-				.conf-agenda__info-item-color {
-					float: left;
-					width: 20px;
-					height: 20px;
-					margin-right: 5px;
-				}
-			}
-		}
+    margin-top: 15px;
+    @include clearfix;
+    &-item {
+      float: left;
+      margin: 0 10px 10px 0;
+      padding: 5px 15px;
+      font-size: 12px;
+      line-height: 20px;
+      font-weight: $font-weight-bold;
+      color: $color-gray;
+      background-color: $color-gray-light;
+      text-transform: uppercase;
+      &--language {
+        height: 30px;
+        padding: 0;
+        border: 1px solid $color-gray-light;
+        img{
+          display: block;
+          height: 100%;
+        }
+      }
+      &--track {
+        padding: 5px 10px 5px 5px;
+        .conf-agenda__info-item-color {
+          float: left;
+          width: 20px;
+          height: 20px;
+          margin-right: 5px;
+        }
+      }
+    }
   }
 }
