@@ -47,14 +47,15 @@ add_action('admin_init', 'confapp_admin_init');
 
 if (get_option('confapp_general')) {
     $confAppGeneral = get_option('confapp_general');
+    $globalLanguage = 'en';
 } else {
     add_option(
-        'confapp_general', array(
+        'confapp_general',
+        [
             'base_url' => '',
             'api_key' => '',
-            'conference' => '',
-            'default_language' => ''
-        )
+            'conference' => ''
+        ]
     );
 }
 
@@ -68,11 +69,7 @@ function confapp_admin_init()
         $new_values = array(
             'base_url' => htmlentities($_POST['base_url'], ENT_QUOTES),
             'api_key' => htmlentities($_POST['api_key'], ENT_QUOTES),
-            'conference' => htmlentities($_POST['conference'], ENT_QUOTES),
-            'default_language' => htmlentities(
-                $_POST['default_language'],
-                ENT_QUOTES
-            )
+            'conference' => htmlentities($_POST['conference'], ENT_QUOTES)
         );
 
         $confAppGeneral = $new_values;
@@ -109,9 +106,9 @@ function confapp_admin_init()
         'confapp_admin_selection'
     );
     add_settings_field(
-        'confapp_admin_selection_default_language',
+        'confapp_admin_selection_available',
         'Select default language',
-        'confapp_admin_selection_default_language_callback',
+        'confapp_admin_selection_available_callback',
         'confapp_admin_page',
         'confapp_admin_selection'
     );
@@ -123,26 +120,21 @@ function confapp_admin_selection_callback()
 }
 
 /**
- * Render default language select.
+ * Render available language.
  */
-function confapp_admin_selection_default_language_callback()
+function confapp_admin_selection_available_callback()
 {
-    global $confAppGeneral;
     global $wpdb;
-    $tablenameLanguage = $wpdb->prefix . 'confapp_conference_translations';
-    $results = $wpdb->get_results("SELECT locale FROM $tablenameLanguage");
-    echo '<select name="default_language">';
-    foreach ($results as $language) {
-        echo '<option ';
-        if ($language->locale == $confAppGeneral['default_language']) {
-            echo 'selected';
-        }
-        echo ' value="'
-            . $language->locale . '"/>'
-            . $language->locale . '</option>';
-    }
-    echo '</select>';
 
+    $tableNameLanguage = $wpdb->prefix . 'confapp_conference_translations';
+    $results = $wpdb->get_results("SELECT locale FROM $tableNameLanguage");
+
+    $availableLanguage = [];
+    foreach ($results as $language) {
+        $availableLanguage[] = $language->locale;
+    }
+
+    echo implode(', ', $availableLanguage);
 }
 
 /**
@@ -227,8 +219,7 @@ function synchronizeConference()
     global $wpdb;
 
     //synchronize conference
-    $conferencesData = getDataByCurl('conferences/' . $confAppGeneral['conference'] . '.json');
-
+    $conferencesData = array_shift(getDataByCurl('conferences/' . $confAppGeneral['conference'] . '.json'));
 
     if ($conferencesData) {
         //add conference
@@ -371,16 +362,16 @@ function synchronizeConference()
             $wpdb->insert(
                 $table,
                 array(
-                  'id' => $localization['id'],
-                  'name' => $localization['name'],
-                  'description' => $localization['description'],
-                  'address' => $localization['address'],
-                  'email' => $localization['email'],
-                  'phone' => $localization['phone'],
-                  'room' => $localization['room'],
-                  'lon' => $localization['lon'],
-                  'lat' => $localization['lat'],
-                  'localization_type_id' => $localization['localization_type_id'],
+                    'id' => $localization['id'],
+                    'name' => $localization['name'],
+                    'description' => $localization['description'],
+                    'address' => $localization['address'],
+                    'email' => $localization['email'],
+                    'phone' => $localization['phone'],
+                    'room' => $localization['room'],
+                    'lon' => $localization['lon'],
+                    'lat' => $localization['lat'],
+                    'localization_type_id' => $localization['localization_type_id'],
                 )
             );
 
@@ -852,20 +843,23 @@ function confapp_activate()
 /**
  * Load agenda template and set static assets
  */
-function get_agenda_template()
+function get_agenda_template($attributes)
 {
-  include dirname( __FILE__ ) . '/agenda_template.php';
+    global $globalLanguage;
 
+    $a = shortcode_atts(['lang' => 'en'], $attributes);
+    $globalLanguage = $a['lang'];
 
-  wp_enqueue_style( 'confapp', plugins_url( 'assets/css/confapp.css' , __FILE__ ) );
-  wp_enqueue_script( 'webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js', null, '1.6.16', true  );
-  wp_enqueue_script( 'confapp', plugins_url( 'assets/js/confapp.js' , __FILE__ ), array( 'jquery', 'webfont' ), '1.0', true  );
+    include dirname( __FILE__ ) . '/agenda_template.php';
+    wp_enqueue_style( 'confapp', plugins_url( 'assets/css/confapp.css' , __FILE__ ) );
+    wp_enqueue_script( 'webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js', null, '1.6.16', true  );
+    wp_enqueue_script( 'confapp', plugins_url( 'assets/js/confapp.js' , __FILE__ ), array( 'jquery', 'webfont' ), '1.0', true  );
 }
 
 /**
  * Register shortcode.
  */
-add_shortcode( 'conffapp_agenda', 'get_agenda_template' );
+add_shortcode('conffapp_agenda', 'get_agenda_template');
 
 /**
  * Activate module hook.
@@ -877,13 +871,14 @@ register_activation_hook(__FILE__, 'confapp_activate');
  *
  * @return mixed
  */
-function getConfrenceDays()
+function getConferenceDays()
 {
-    global $confAppGeneral;
+    global $globalLanguage;
     global $wpdb;
+
     $tablename = $wpdb->prefix . 'confapp_day';
     $tablenameLanguage = $wpdb->prefix . 'confapp_day_translations';
-    $language = getConfrenceLang();
+    $language = getConferenceLang();
 
     $results = $wpdb->get_results("
       SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale FROM $tablename
@@ -895,7 +890,7 @@ function getConfrenceDays()
         $results = $wpdb->get_results("
           SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablenameLanguage.day_id =  $tablename.id
-          AND $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
+          AND $tablenameLanguage.locale = '$globalLanguage'
       ");
     }
 
@@ -905,13 +900,13 @@ function getConfrenceDays()
 /**
  * Get Maps from database.
  */
-function getConfrenceMaps()
+function getConferenceMaps()
 {
-    global $confAppGeneral;
+    global $globalLanguage;
     global $wpdb;
     $tablename = $wpdb->prefix . 'confapp_maps';
     $tablenameLanguage = $wpdb->prefix . 'confapp_maps_translations';
-    $language = getConfrenceLang();
+    $language = getConferenceLang();
 
     $results = $wpdb->get_results("
       SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale  FROM $tablename
@@ -923,7 +918,7 @@ function getConfrenceMaps()
         $results = $wpdb->get_results("
           SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale  FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.map_id
-          AND  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
+          AND  $tablenameLanguage.locale = '$globalLanguage'
       ");
     }
 
@@ -937,16 +932,17 @@ function getConfrenceMaps()
  * @param $track
  * @return mixed
  */
-function getConfrencePresentations($day)
+function getConferencePresentations($day)
 {
     global $confAppGeneral;
+    global $globalLanguage;
     global $wpdb;
     $tablename = $wpdb->prefix . 'confapp_presentation';
     $tablenameLanguage = $wpdb->prefix . 'confapp_presentation_translations';
     $tablenameSpekaer = $wpdb->prefix . 'confapp_speaker';
     $tablenameSpekaerTranslation = $wpdb->prefix . 'confapp_speaker_translations';
     $tablenameSpeeches = $wpdb->prefix . 'confapp_speaches';
-    $language = getConfrenceLang();
+    $language = getConferenceLang();
 
     $results = $wpdb->get_results("
       SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.description, $tablenameLanguage.locale
@@ -962,7 +958,7 @@ function getConfrencePresentations($day)
           SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.description, $tablenameLanguage.locale
           FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.presentation_id
-          AND  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
+          AND  $tablenameLanguage.locale = '$globalLanguage'
           WHERE $tablename.day_id = $day
           GROUP BY $tablename.id
     ");
@@ -986,7 +982,7 @@ function getConfrencePresentations($day)
           FROM $tablenameSpeeches
           LEFT JOIN $tablenameSpekaer ON $tablenameSpekaer.id = $tablenameSpeeches.speaker_id
           LEFT JOIN $tablenameSpekaerTranslation ON $tablenameSpekaerTranslation.speaker_id = $tablenameSpeeches.speaker_id
-          AND $tablenameSpekaerTranslation.locale = '{$confAppGeneral['default_language']}'
+          AND $tablenameSpekaerTranslation.locale = '$globalLanguage'
           WHERE $tablenameSpeeches.presentation_id = $result->id
           GROUP BY $tablenameSpekaer.id"
             );
@@ -1006,11 +1002,11 @@ function getConfrencePresentations($day)
  */
 function getSpeaker($speakerId)
 {
-    global $confAppGeneral;
+    global $globalLanguage;
     global $wpdb;
     $tablename = $wpdb->prefix . 'confapp_speaker';
     $tablenameLanguage = $wpdb->prefix . 'confapp_speaker_translations';
-    $language = getConfrenceLang();
+    $language = getConferenceLang();
 
     $results = $wpdb->get_results("
       SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.description, $tablenameLanguage.locale FROM $tablename
@@ -1023,7 +1019,7 @@ function getSpeaker($speakerId)
         $results = $wpdb->get_results("
           SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.description, $tablenameLanguage.locale FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.speaker_id
-          AND  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
+          AND  $tablenameLanguage.locale = '$globalLanguage'
           WHERE $tablename.id = $speakerId
       ");
     }
@@ -1036,13 +1032,13 @@ function getSpeaker($speakerId)
  *
  * @return mixed
  */
-function getConfrenceTracks()
+function getConferenceTracks()
 {
-    global $confAppGeneral;
+    global $globalLanguage;
     global $wpdb;
     $tablename = $wpdb->prefix . 'confapp_track';
     $tablenameLanguage = $wpdb->prefix . 'confapp_track_translations';
-    $language = getConfrenceLang();
+    $language = getConferenceLang();
 
     $results = $wpdb->get_results("
       SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale FROM $tablename
@@ -1054,7 +1050,7 @@ function getConfrenceTracks()
         $results = $wpdb->get_results("
           SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.track_id
-          AND  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
+          AND  $tablenameLanguage.locale = '$globalLanguage'
       ");
     }
 
@@ -1066,13 +1062,13 @@ function getConfrenceTracks()
  *
  * @return mixed
  */
-function getConfrenceLocalizations()
+function getConferenceLocalizations()
 {
-    global $confAppGeneral;
+    global $globalLanguage;
     global $wpdb;
     $tablename = $wpdb->prefix . 'confapp_localizations';
     $tablenameLanguage = $wpdb->prefix . 'confapp_localizations_translations';
-    $language = getConfrenceLang();
+    $language = getConferenceLang();
 
     $results = $wpdb->get_results("
       SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.description, $tablenameLanguage.locale FROM $tablename
@@ -1084,7 +1080,7 @@ function getConfrenceLocalizations()
         $results = $wpdb->get_results("
           SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.description, $tablenameLanguage.locale FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.localization_id
-          AND $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
+          AND $tablenameLanguage.locale = '$globalLanguage'
       ");
     }
 
@@ -1096,13 +1092,13 @@ function getConfrenceLocalizations()
  *
  * @return mixed
  */
-function getConfrenceData()
+function getConferenceData()
 {
-    global $confAppGeneral;
+    global $globalLanguage;
     global $wpdb;
     $tablename = $wpdb->prefix . 'confapp_conferences';
     $tablenameLanguage = $wpdb->prefix . 'confapp_conference_translations';
-    $language = getConfrenceLang();
+    $language = getConferenceLang();
 
     $results = $wpdb->get_results("
       SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale FROM $tablename
@@ -1115,7 +1111,7 @@ function getConfrenceData()
         $results = $wpdb->get_results("
           SELECT $tablename.*, $tablenameLanguage.name, $tablenameLanguage.locale FROM $tablename
           LEFT JOIN $tablenameLanguage ON $tablename.id = $tablenameLanguage.conference_id
-          AND  $tablenameLanguage.locale = '{$confAppGeneral['default_language']}'
+          AND  $tablenameLanguage.locale = '$globalLanguage'
           LIMIT 1
       ");
     }
@@ -1128,13 +1124,13 @@ function getConfrenceData()
  *
  * @return string
  */
-function getConfrenceLang()
+function getConferenceLang()
 {
     return substr(get_locale(), 0, 2);
 }
 
 
-function getConfrenceLangs()
+function getConferenceLangs()
 {
     global $wpdb;
     $tableName = $wpdb->prefix . 'confapp_conference_translations';
