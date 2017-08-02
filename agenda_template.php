@@ -5,10 +5,10 @@
 ?>
 <div class="confapp-agenda-wrapper">
     <?php
-        $days          = getConfrenceDays();
-        $langs         = getConfrenceLangs();
-        $tracks        = getConfrenceTracks();
-        $localizations = getConfrenceLocalizations();
+        $days          = getConferenceDays();
+        $langs         = getConferenceLangs();
+        $tracks        = getConferenceTracks();
+        $localizations = getConferenceLocalizations();
 
         function sortData(&$data, $key) {
             usort($data, function($a, $b) use ($key) {
@@ -148,7 +148,7 @@
         >
             <?php
                 $presentationsByDate = [];
-                foreach (getConfrencePresentations($day->id) as $presentation) {
+                foreach (getConferencePresentations($day->id) as $presentation) {
                     $date                 = strtotime($presentation->date);
                     $startTime            = date('H:i', $date);
                     $fullStartDateAndTime = date('d-m-Y_H:i', $date);

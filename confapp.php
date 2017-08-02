@@ -107,7 +107,7 @@ function confapp_admin_init()
     );
     add_settings_field(
         'confapp_admin_selection_available',
-        'Select default language',
+        'Available languages',
         'confapp_admin_selection_available_callback',
         'confapp_admin_page',
         'confapp_admin_selection'
@@ -845,15 +845,16 @@ function confapp_activate()
  */
 function get_agenda_template($attributes)
 {
+    wp_enqueue_style( 'confapp', plugins_url( 'assets/css/confapp.css' , __FILE__ ) );
+    wp_enqueue_script( 'webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js', null, '1.6.16', true  );
+    wp_enqueue_script( 'confapp', plugins_url( 'assets/js/confapp.js' , __FILE__ ), array( 'jquery', 'webfont' ), '1.0', true  );
+
     global $globalLanguage;
 
     $a = shortcode_atts(['lang' => 'en'], $attributes);
     $globalLanguage = $a['lang'];
 
     include dirname( __FILE__ ) . '/agenda_template.php';
-    wp_enqueue_style( 'confapp', plugins_url( 'assets/css/confapp.css' , __FILE__ ) );
-    wp_enqueue_script( 'webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js', null, '1.6.16', true  );
-    wp_enqueue_script( 'confapp', plugins_url( 'assets/js/confapp.js' , __FILE__ ), array( 'jquery', 'webfont' ), '1.0', true  );
 }
 
 /**
