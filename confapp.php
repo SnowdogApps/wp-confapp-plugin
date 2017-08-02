@@ -189,7 +189,7 @@ function confapp_admin_selection_conference_callback()
     } else {
         echo 'Wrong base url or api key';
     }
-    echo '<p class="submit"><input type="submit" class="button-primary" value="SaveChanges" /></p>';
+    echo '<p class="submit"><button type="submit" class="button-primary">Save changes</button></p>';
 }
 
 /**
