@@ -2,12 +2,13 @@
 <?php
 /*
 Plugin Name: Snowdog_Confapp
-Plugin URI:
-Description: Integration with confapp
+Plugin URI: https://github.com/SnowdogApps/wp-confapp-plugin
+Description: Integration with http://confapp.co/
 Version: 1.0
 Author: Dawid Czaja
-Author URI:
-License:
+Author URI: https://snow.dog/
+License: MIT
+Text Domain: snowdog-confapp
 */
 
 add_action('admin_menu', 'confapp_setup_menu');
@@ -839,6 +840,16 @@ function confapp_activate()
 
     add_option('confapp_database_version', '1.0');
 }
+
+/**
+ * Load translations
+ */
+function translations_init()
+{
+    load_plugin_textdomain( 'snowdog-confapp', false, basename(dirname(__FILE__)) );
+}
+
+add_action('plugins_loaded', 'translations_init');
 
 /**
  * Load agenda template and set static assets

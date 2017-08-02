@@ -51,9 +51,9 @@
                 <button type="button"
                         class="conf-days__item <?= $index === 0 ? 'conf-days__item--selected' : ''; ?>"
                         data-day-filter="<?= $day->date; ?>"
-                        title="<?= __('Day') . ' ' . ($index + 1) . ' - ' . $day->date ?>"
+                        title="<?= esc_html_e('Day', 'snowdog-confapp') . ' ' . ($index + 1) . ' - ' . $day->date ?>"
                 >
-                    <?= __('Day') . '&nbsp;' . ($index + 1) ?>
+                    <?= esc_html_e('Day', 'snowdog-confapp') . '&nbsp;' . ($index + 1) ?>
                 </button>
             <?php endforeach; ?>
         </div>
@@ -64,19 +64,19 @@
             <span class="conf-filters-dropdown-trigger__icon">
                 <?php include 'assets/images/conf-filters-dropdown-trigger.svg'; ?>
             </span>
-            <?= __('Filter') ?>
+            <?= esc_html_e('Filter', 'snowdog-confapp') ?>
         </button>
 
         <div class="conf-filters-dropdown">
             <?php if (sizeof($tracks) > 1): ?>
                 <div class="conf-filter conf-filter--tracks">
                     <h2 class="conf-filter__label">
-                        <?= __('Tracks') ?>
+                        <?= esc_html_e('Tracks', 'snowdog-confapp') ?>
                     </h2>
                     <button class="conf-filter__item conf-filter__item--selected"
                             data-track-filter="all"
                     >
-                        <?= __('All') ?>
+                        <?= esc_html_e('All', 'snowdog-confapp') ?>
                     </button>
                     <?php foreach ($tracks as $track): ?>
                         <button class="conf-filter__item"
@@ -96,13 +96,13 @@
             <?php if (sizeof($localizations) > 1): ?>
                 <div class="conf-filter conf-filter--localizations">
                     <h2 class="conf-filter__label">
-                        <?= __('Localizations') ?>
+                        <?= esc_html_e('Localizations', 'snowdog-confapp') ?>
                     </h2>
                     <button type="button"
                             class="conf-filter__item conf-filter__item--selected"
                             data-localization-filter="all"
                     >
-                        <?= __('All') ?>
+                        <?= esc_html_e('All', 'snowdog-confapp') ?>
                     </button>
                     <?php foreach ($localizations as $localization): ?>
                         <button type="button"
@@ -118,13 +118,13 @@
             <?php if (sizeof($langs) > 1): ?>
                 <div class="conf-filter conf-filter--languages">
                     <h2 class="conf-filter__label">
-                        <?= __('Languages') ?>
+                        <?= esc_html_e('Languages', 'snowdog-confapp') ?>
                     </h2>
                     <button type="button"
                             class="conf-filter__item conf-filter__item--selected"
                             data-lang-filter="all"
                     >
-                        <?= __('All') ?>
+                        <?= esc_html_e('All', 'snowdog-confapp') ?>
                     </button>
                     <?php foreach ($langs as $lang): ?>
                         <button type="button"
