@@ -1,5 +1,5 @@
 # Wordpres Confapp Plugin
-Integration with http://confapp.co/ which can add event agenda via shortcode
+Wordpress plugin which integrate your page with [ConfApp API](http://confapp.co/) to render selected event agenda
 
 ## How to use it?
 1. Contact with us to get API URL and private key
