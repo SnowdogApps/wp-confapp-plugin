@@ -1,0 +1,39 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-08-02 11:11+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/"
+
+#: agenda_template.php:54 agenda_template.php:56
+msgid "Day"
+msgstr ""
+
+#: agenda_template.php:67
+msgid "Filter"
+msgstr ""
+
+#: agenda_template.php:74
+msgid "Tracks"
+msgstr ""
+
+#: agenda_template.php:79 agenda_template.php:105 agenda_template.php:127
+msgid "All"
+msgstr ""
+
+#: agenda_template.php:99
+msgid "Localizations"
+msgstr ""
+
+#: agenda_template.php:121
+msgid "Languages"
+msgstr ""
