@@ -9,6 +9,8 @@ Wordpress plugin which integrate your page with [ConfApp API](http://confapp.co/
 5. Press "Manual synchronize" to get all conference data
 6. Available languages codes will be displayed in this view, you can use it in shortcodes
 7. Add `[conffapp_agenda lang="en"]` shortcode to your page or post to render agenda
+8. If you're using wp cache modules, please remember to clear it. It's necessary because cached pages are stored on server as html and PHP files.
+
 
 ## Translations
 By default everything is in English and we are shipping Polish tranlsations files.
