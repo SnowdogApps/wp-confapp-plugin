@@ -76,7 +76,8 @@ jQuery(function($) {
 
     function markOngoingPressenations() {
         var date                 = new Date(),
-            currentTime          = date.getHours() + ':'
+            currentTime          = (date.getHours() < 10 ? '0' : '')
+                                   + date.getHours() + ':'
                                    + (date.getMinutes() < 10 ? '0' : '')
                                    + date.getMinutes(),
             currentDay           = date.getFullYear() + '-'
