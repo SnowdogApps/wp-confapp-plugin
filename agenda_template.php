@@ -133,7 +133,7 @@
                         >
                             <img class="conf-filter__item-icon"
                                  src="<?= plugins_url('assets/images/flags/' . $lang->locale . '.svg', __FILE__) ?>"
-                                 alt="<?= $presentation->locale ?>"
+                                 alt="<?= $lang->locale ?>"
                             />
                         </button>
                     <?php endforeach; ?>
@@ -171,8 +171,8 @@
 
             <?php foreach ($presentationsByDate as $date => $presentationsInSameTime): ?>
                 <li class="conf-agenda__item"
-                    data-start-time="<?= $presentation->startTime ?>"
-                    data-end-time="<?= $presentation->endTime ?>"
+                    data-start-time="<?= $presentationsInSameTime[0]->startTime ?>"
+                    data-end-time="<?= $presentationsInSameTime[0]->endTime ?>"
                 >
                     <?php foreach ($presentationsInSameTime as $key => $presentation): ?>
                         <?php
