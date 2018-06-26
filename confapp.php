@@ -865,7 +865,9 @@ function get_agenda_template($attributes)
     $a = shortcode_atts(['lang' => 'en'], $attributes);
     $globalLanguage = $a['lang'];
 
+    ob_start();
     include dirname( __FILE__ ) . '/agenda_template.php';
+    return ob_get_clean();
 }
 
 /**

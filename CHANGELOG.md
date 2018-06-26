@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.6.1] - 26-06-2018
+### Fixed
+- Shortcode template. Funtion now return instead of printing
+- Time comparsion logic
+- Presentaion at same time
+
 ## [1.6.0] - 02-08-2017
 ### Added
 - Switching of event agenda language using shortcode params
